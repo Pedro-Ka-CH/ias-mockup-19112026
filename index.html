@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IAS | Treasury cash view (mockup)</title>
+<style>
+:root{--paper:#fafaf7;--ink:#14202e;--mut:#6f7480;--rule:#d9dde3;--acc:#1663c7;--acc2:#21b07c;--sand:#9fb8d6;--red:#b8321f;--amb:#b7791f;--grn:#2f7d4f;--wash:#eef1f4;--f:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;--fh:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,serif;--fm:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;color:var(--ink);font:14px/1.5 var(--f);padding-bottom:60px}
+.serif,h1{font-family:var(--fh);font-weight:400}
+b,strong{font-weight:600}
+.hdr{border-bottom:1px solid var(--rule);background:var(--paper);position:sticky;top:0;z-index:20}
+.hdr .wrap{display:flex;align-items:center;gap:16px;height:58px}
+.logo{height:34px;display:block}
+.prod{font:12px var(--f);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);border-left:1px solid var(--sand);padding-left:16px}
+.hdr .demo{margin-left:auto}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+.lnk{color:var(--acc);cursor:pointer;text-decoration:none;border-bottom:1px solid var(--sand)}
+.lnk:hover{border-color:var(--acc)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px 28px;padding:14px 0 0;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-bottom:12px}
+.brand{font:600 12px var(--fm);letter-spacing:.14em;text-transform:uppercase}
+.views{display:flex;gap:22px;margin-left:auto;align-self:flex-end;flex-wrap:wrap}
+.views span{cursor:pointer;color:var(--mut);padding:0 0 12px;margin-bottom:-1px;border-bottom:2px solid transparent;white-space:nowrap}
+.views span.on{color:var(--ink);border-color:var(--acc)}
+.views span{display:inline-flex;align-items:baseline;gap:6px}
+.sc{display:inline-block;font:600 9.5px var(--fm);letter-spacing:.06em;text-transform:uppercase;border-radius:8px;padding:0 6px;font-style:normal;line-height:16px}
+.sc.p{background:#e3f4ec;color:#1b6b45}.sc.o{background:#efe9fb;color:#5a3fb8}.sc.r{background:#eceef1;color:#5b6170}
+.scopebar{display:none}
+.rmbar{margin:22px 0 0;padding:12px 16px;border:1px dashed #cbbcf0;border-radius:10px;background:#faf8ff;font-size:13px}
+.rmbar .chip.on{background:#5a3fb8;border-color:#5a3fb8;color:#fff}
+.sc.r{background:#efe9fb;color:#5a3fb8}
+.tag{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.demo{color:#8a6d00;border:1px solid #d9c27a;padding:1px 7px}
+.focus{display:inline-flex;gap:6px;align-items:center;background:var(--wash);padding:2px 10px;border-radius:12px;font-size:12.5px}
+.focus b{cursor:pointer;color:var(--mut);font-weight:400}
+.eyebrow{margin:30px 0 4px;color:var(--mut);font-size:12.5px}
+.hero{font-size:44px;line-height:1.12;margin:0 0 10px;letter-spacing:-.01em}
+.sub{color:#4d535d;max-width:780px;font-size:15px;margin:0 0 6px}
+.brief{border-left:2px solid var(--acc2);padding-left:12px;margin-top:14px;max-width:780px;color:#4d535d}
+.brief p{margin:4px 0}
+h2{font:600 11.5px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 12px}
+section{padding:26px 0;border-top:1px solid var(--rule)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:44px}
+.att{display:grid;grid-template-columns:14px 1fr auto;gap:8px 12px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--wash)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--amb)}
+.dot.critical{background:var(--red)}.dot.info{background:var(--sand)}.dot.ok{background:var(--grn)}
+.bar{display:grid;grid-template-columns:130px 1fr 64px;gap:10px;align-items:center;padding:3px 0;cursor:pointer;font-size:13px}
+.bar:hover .lbl{text-decoration:underline}
+.bar .trk{height:12px;position:relative}.bar .fill{height:12px;background:var(--acc);display:block}
+.bar.sel .fill{background:var(--ink)}.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+.bar .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.read{min-height:22px;font-size:13px;margin-top:6px;font-variant-numeric:tabular-nums}
+input[type=range]{width:200px;accent-color:var(--acc);vertical-align:middle}
+.chip{display:inline-block;border:1px solid var(--rule);padding:3px 11px;border-radius:14px;cursor:pointer;font-size:12.5px;color:#4b505a;background:var(--paper)}.chip:hover{border-color:var(--ink)}
+.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin:16px 0 8px}.stat .n1{font:30px/1.15 var(--fh)}.stat .l{font:600 11px var(--fm);letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}.stat .s{font-size:12px;color:var(--mut)}
+.sbar{display:grid;grid-template-columns:200px 1fr 120px;gap:10px;align-items:center;font-size:13px;padding:3px 0}.sbar .trk{height:10px;background:var(--wash);display:block}.sbar .fill{display:block;height:10px}
+.scen{display:flex;gap:12px;align-items:center;font-size:13px;margin:0 0 6px;flex-wrap:wrap}.scen label{min-width:290px}
+svg text{font:11px "Segoe UI",Helvetica,Arial,sans-serif;fill:#6b707a}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{font:600 11px var(--fm);letter-spacing:.08em;text-transform:uppercase;color:var(--mut);text-align:left;padding:6px 8px;border-bottom:1px solid var(--ink);white-space:nowrap}
+td{padding:6px 8px;border-bottom:1px solid var(--wash);vertical-align:top}
+tr.tot td{border-bottom:1px solid var(--ink)}
+.n{text-align:right;font-variant-numeric:tabular-nums}.neg{color:var(--red)}.pos{color:var(--grn)}.mut{color:var(--mut)}
+input[type=text]{border:0;border-bottom:1px solid var(--ink);background:transparent;padding:6px 2px;font:inherit;width:260px;outline:none}
+.note{color:var(--mut);font-size:12.5px;max-width:780px}
+details.fold{border:1px solid var(--rule);border-radius:10px;margin:12px 0;background:var(--paper)}
+details.fold>summary{list-style:none;cursor:pointer;padding:13px 16px;font-weight:600;font-size:14.5px;display:flex;align-items:center;gap:10px}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary::before{content:"\25B8";color:var(--mut);transition:transform .15s;display:inline-block}
+details.fold[open]>summary::before{transform:rotate(90deg)}
+details.fold>summary .mut{font-weight:400;font-size:12.5px}
+details.fold>.fb{padding:2px 16px 16px;border-top:1px solid var(--wash)}
+details.fold:hover{border-color:var(--sand)}
+.ask{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--acc);cursor:pointer;white-space:nowrap}
+.ask svg{width:15px;height:15px}
+.sg{display:inline-block;font:600 9.5px var(--fm);letter-spacing:.08em;text-transform:uppercase;color:#5a3fb8;border:1px solid #cbbcf0;border-radius:8px;padding:0 6px;margin-left:8px;vertical-align:2px}
+.need{display:inline-block;font:600 10px var(--fm);letter-spacing:.06em;text-transform:uppercase;border-radius:8px;padding:1px 7px}
+.need.t1{background:#e3f4ec;color:#1b6b45}.need.t2{background:#e4edf9;color:#1d58a8}.need.t3{background:#efe9fb;color:#5a3fb8}
+.idea{display:grid;grid-template-columns:170px 1fr;gap:6px 22px;padding:14px 0;border-bottom:1px solid var(--wash)}
+.idea h3{margin:0 0 3px;font:600 15px var(--fm)}
+.idea p{margin:0;color:#4d535d;font-size:13.5px}
+.idea .why{color:var(--mut);font-size:12.5px;margin-top:4px}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 16px;font-size:13px;display:none;z-index:9;max-width:80vw}
+@media(max-width:820px){.cols{grid-template-columns:1fr}.hero{font-size:32px}.stats{grid-template-columns:repeat(2,1fr)}.sbar{grid-template-columns:130px 1fr 100px}.idea{grid-template-columns:1fr}}
+
+/* ===== chart animation on hover (animated copy) ===== */
+svg.anim-on .a-line{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw 1.1s cubic-bezier(.65,0,.35,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+svg.anim-on .a-fade{animation:afade .8s ease both;animation-delay:.3s}
+@keyframes afade{from{opacity:0}}
+svg.anim-on .a-pop{transform-box:fill-box;transform-origin:center;animation:apop .45s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes apop{from{transform:scale(0)}to{transform:scale(1)}}
+svg.anim-on .a-grow{transform-box:fill-box;animation:agrow .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes agrow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.anim-bars.anim-on .fill{animation:abar .8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes abar{from{width:0}}
+@media (prefers-reduced-motion: reduce){svg.anim-on *,.anim-bars.anim-on *{animation:none!important}}
+
+/* ===== EXPERIMENT E1–E10 ===== */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0 4px}
+.kpi{border:1px solid var(--rule);border-radius:12px;padding:12px 14px;background:var(--paper)}
+.kpi .l{font:600 10.5px var(--fm);letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.kpi .v{font:26px/1.2 var(--fh)}.kpi .d{font-size:12px;color:var(--mut)}
+.kpi svg{display:block;margin-top:6px}
+.cmp{display:inline-flex;border:1px solid var(--rule);border-radius:14px;overflow:hidden;font-size:12px;vertical-align:middle;margin-left:8px}
+.cmp span{padding:2px 10px;cursor:pointer;color:var(--mut)}.cmp span.on{background:var(--ink);color:var(--paper)}
+.chg{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--wash);font-size:13.5px}
+.chg .ar{font-weight:700}
+/* E9b: hover card replaces the text line under each chart */
+.read{display:none}
+#ttip{position:fixed;z-index:30;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12px;line-height:1.45;padding:8px 10px;border-radius:8px;max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,.18);opacity:0;transition:opacity .12s}
+#ttip .mut{color:#c7ceda}
+.wfx{font-size:13px;color:#4d535d;margin:6px 0 0}
+.modebtn{margin-left:10px;border:1px solid var(--rule);background:transparent;border-radius:14px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer;color:var(--ink)}
+html.dark{filter:invert(.92) hue-rotate(180deg);background:#fafaf7}
+html.dark img{filter:invert(1) hue-rotate(180deg)}
+#chatbtn{position:fixed;right:22px;bottom:22px;width:54px;height:54px;border-radius:50%;border:0;cursor:pointer;background:linear-gradient(135deg,#1663c7,#21b07c);color:#fff;box-shadow:0 8px 24px rgba(22,99,199,.35);z-index:40;display:flex;align-items:center;justify-content:center}
+#chatbtn svg{width:24px;height:24px}
+#chat{position:fixed;right:22px;bottom:88px;width:360px;max-width:calc(100vw - 32px);height:480px;max-height:70vh;background:var(--paper);border:1px solid var(--rule);border-radius:16px;box-shadow:0 18px 50px rgba(20,32,46,.22);z-index:40;display:none;flex-direction:column;overflow:hidden}
+#chat.open{display:flex}
+#chat .ch{padding:12px 14px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:8px}
+#chat .ch b{font-size:14px}#chat .ch .tag{margin-left:auto}
+#chat .cstudio{background:#fff7e3;border-bottom:1px solid #efd58e;color:#6f5200;font-size:11.5px;line-height:1.45;padding:8px 14px}
+#chat .cb{flex:1;overflow:auto;padding:12px 14px;font-size:13px}
+#chat .m{margin:0 0 10px;max-width:88%;padding:8px 11px;border-radius:12px;line-height:1.45}
+#chat .m.u{margin-left:auto;background:var(--ink);color:var(--paper);border-bottom-right-radius:4px}
+#chat .m.a{background:var(--wash);border-bottom-left-radius:4px}
+#chat .m.a .src{display:block;color:var(--mut);font-size:11px;margin-top:4px}
+#chat .sq{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 8px}
+#chat .sq span{font-size:11.5px;border:1px solid var(--rule);border-radius:12px;padding:3px 9px;cursor:pointer}
+#chat .sq span:hover{border-color:var(--ink)}
+#chat form{display:flex;border-top:1px solid var(--rule)}
+#chat input{flex:1;border:0;padding:12px 14px;font:inherit;background:transparent;outline:none;color:var(--ink);width:auto}
+#chat button.s{border:0;background:transparent;color:var(--acc);font-weight:600;padding:0 14px;cursor:pointer}
+@media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.how{background:var(--wash);border:1px solid var(--rule);border-radius:10px;padding:9px 14px;font-size:13px;margin:12px 0 4px;position:relative;padding-right:34px}.how .hx{position:absolute;right:12px;top:8px;cursor:pointer;color:var(--mut)}
+.scopebar{display:block!important}
+.sc.w{background:#e6f4ec;color:#2f7d4f}
+.prt{margin-left:10px;font:inherit;font-size:12px;border:1px solid var(--rule);background:#fff;border-radius:6px;padding:3px 10px;cursor:pointer}
+@media print{.hdr .modebtn,.top .views,#scopebar,#toast,.prt,#foot,.ask{display:none!important}body{background:#fff}.op section{break-inside:avoid}}
+.views span[data-view="ideas"]{margin-left:14px;padding-left:16px;border-left:1px dashed var(--rule)}.sc.i{background:#fff4e0;color:#8a5a12;font-style:normal}.rmtag{display:inline-flex;align-items:center;gap:10px;background:#fff8ec;border:1px dashed #d9b77a;border-radius:8px;padding:6px 12px;font-size:12.5px;color:#8a5a12;margin:6px 0 12px}.idea{border-left:3px dashed #d9b77a;padding-left:12px}</style>
+</head>
+<body>
+<div class="hdr"><div class="wrap"><img class="logo" alt="Integral Ad Science" src="data:image/png;base64,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R5x3uTfffNPOzg7H2jpl+fLl/EeQBw8eTE1NbazNb+LEiSEhIba2tmjN5z/26tq16969e4cNGyYIAnZJQADz2/2ysrJ27tzJedhtY2OzYsUKgqu/uoQx5uTkNGvWLJ7tQiktLS319fVtxNccP3783r17O3bsiMHc31Y+Y6x379779u0TzzyjugABzFVgYGBBQQHhOw/DzJkzu3TpgsrXwcHQypUrzc3NeaY+ISQ0NPTmzZuN2PUPGTIkKioKlzOf3daMsddffz0yMrJHjx5IX0AA8/bw4cOgoCDOhZqamopTL4EOcnFxmThxIufcevDgQeOehhFH85GRkZMmTUIGPxG94sCXEOLu7h4REdG+fXtUESCAuRJ3ueDg4Nu3b3Mu2s3NrU+fPmgCnfXWW2+ZmJhwLjQgIODevXuNO8Kzt7ffvXv3u+++Kz5bheEdeXzauVmzZl999ZW/v794yR9jX0AA894Py8rK/P39OZcrk8lWrVqFKe502aBBg0aPHs15a8zKytq9e3ejv7KZmdkPP/zg7+9va2uLcR4hRBCEjh07hoWFffLJJ9gNAQGsNfv37+e/9MKoUaNGjBiBytdlUql03bp1MpmM56qUhBC5XF5aWqqJ13d3d4+JiRk8eDAad+LEiYcPH540aRKqAhDAWlNdXa1QKHg3jESyatUqqVSK+tdxI0eOHDJkCOch49WrV3/55RcNBbyzs3N0dPSHH37I/+y6jrC0tPzmm28iIiK6du2KkwGAANYOcd87evToyZMnORfdt29fV1dXNIHuMzY2fvvtt/lfF1QoFFVVVRra7Js3b/7tt9/u27dPXP+YPL72aaiXPymldSeZhw8ffvjw4Y8//tjY2JjgcjgggLW4W6pUKm9vb/4ruHl4eJiamqIJ9MKECRNcXFw4F5qcnCyuUdjo27x485G40N6xY8f+8Y9/WFpaGvZAkDEmCIKtre0333wTHR09YMAADHwBAax9iYmJR44cIXyf/e3atau49ALohWbNmnl6enIeLalUKoVCoVKpNHToKX7TsmXLr7/+OjY21tXVtW4KTMMYFNYf0MtksjfffDMhIeHjjz/m+Wy3em9cPGYglD7+HhDABsrb25v/0gvLly+3trbGMbgemT59eq9evXius0spPXbsWHx8vIaODut/kH79+u3fv3/37t19+/YVizOMDBbrbfjw4fv37w8JCenevftffnzdC2BGCDoHBLChS01NjYyM5Fxo69atFyxYQHDxSa/6cUtLS3HGUG6HTZTS2tpauVzOIQ4ZY1KpdPbs2ceOHfPx8XnllVcM4OhQvN1s586dv/32m3i/BQ55AQGsQ4fGvr6+GnrY4xkWL17ctm1bNIEeEfNvwYIF3bp141aouBhiZGRkSkoKhw8ofkZLS8tVq1adOHHCx8en7v4sfTlYrP8m+/btu23btvj4+Pnz59fd7K0fh7xaOkygON2t1wGsoYtVz1ZbW6v2vnr9+vUdO3ZwfsMWFhbu7u7YLvWRtbX1kiVLOBdaWVn5008/cV6ZuGXLlqtWrTp+/HhoaOjIkSONjIz0YuzIGDM1NR0/fnxERMTx48cXL15sYWGhd5uZQFQqonz8Vavhr98LEphK4H7SmxGmYoKKKJUa/5h/+GKE394k41ZSu3btBgwYwPMYkzEmzpyuxh9SSs+cOdOtWzfOT+KOHTv25ZdfNphrbE3N4sWL4+LiSkpKeM7LUVBQkJ+f37p1a84f1srKau7cubNmzTp58uTOnTsPHTqUnZ1dfyipxVSuq/+699ChQwc3N7cFCxb0799fj3cuxiwFG0fVMBWrNFEZ10pqNTwwZUpKCFPZ1zgQY76nS1VERWvbKvsI1ZRKVFJBxueOs1pS3UJmT3j1+pTbTtIoq4irF6UvOo2c+FZVKpVEIuG8r0okEkO60bRJETc2ztu5uCqtRCLR1pwtdQeLeXl5MTEx+/btO378eFFRkY40SsuWLYcPHz5t2rTx48e3atVK/7cxQlSqSmmJhEhlzLRWUivR7MBUxZhURaiMqoxU5pTKqITjhkVUtbSKMEIFqSBREcppt5IREykxNrQA1sfOFPUA2Gb+vp/84/HijRs3jh8/vn///qSkpNzcXD7j3Sf6MXt7+wEDBkyZMmX48OGdO3c2pApXEUYJk6gkhBAiFQjTaCQK4mVKJn7H8TowI4wwQhkllKgokzKOexbPohDAAKAJeXl5qampR44cSUxMvH79+r179zTa27Rq1crR0VFcHqNXr15t2rQxyFpVEiJlhBAiUIESpuG4kBDCCKmmhFAmIdSIWzqpiIoRJmWUEkoIZZRfUFFCuR1pIIABQLPDYkEQ7t+/f+3ataSkpMuXL9+6dSszMzM/P7+yslLtIoyNjW1tbTt06NCpU6eePXv269fPycnJzs7O8KdPZwJhhEkYI5QyiUZPzFLGxFEoYURCGc+bdpnACCFEwgihlFDG8RYwynEUjAAGAK5UKtWjR49ycnLu3LmTl5eXn5//4MGDwsLC4uLi8vLyioqK6urq+ue0LSwszMzMWrRo0bJly5deeqlVq1atW7fu2LFj+/btW7RoIZPJUKWgpxDAAKDTg2ncjQGGChNxAIAODxGQvoAABgAAAAQwAAAAAhgAAAAQwAAAAAhgAAAAQAADAAAggAEAABDAAAAAgAAGAABAAAMAAAACGAAAAAEMAAAACGAAAAAEMAAAACCAAQAAEMAAAAAIYAAAAEAAAwAAIIABAAAAAQwAAIAABgAAAAQwAAAAAhgAAAAQwAAAAAhgAAAABDAAAAAggAEAABDAAAAAgAAGAABAAAMAAAACGAAAAAEMAAAACGAAAAAEMAAAACCAAQAAEMAAAAAIYAAAAEAAAwAAIIABAAAAAQwAAIAABgAAAAQwAAAAAhgAAAAQwAAAAAhgAAAABDAAAAAggAEAABDAAAAAgAAGAABAAAMAAAACGAAAAAEMAAAACGAAAAAEMAAAAAIYAAAAEMAAAAAIYAAAAGiw/wcBDj+al03SRAAAAABJRU5ErkJggg=="><span class="prod">Treasury cash view</span><span class="tag demo">Mockup · simulated data, not IAS figures</span></div></div>
+<div class="wrap">
+  <div class="top">
+    <div class="meta"><span class="brand">Cash and liquidity</span><span class="tag" id="asof"></span><span id="focus"></span></div>
+    <div class="views" id="views"></div>
+  </div>
+  <div id="scopebar" class="scopebar"></div>
+  <div id="view"></div>
+  <p class="note" style="margin-top:30px" id="foot"></p>
+</div>
+<div id="toast"></div>
+<script>
+/* ---------------- data ----------------
+   SIMULATED for Integral Ad Science: no IAS figures. Banks, entities, accounts, flows and events are invented. */
+const AS_OF='30 Oct 2026', BUF=125e6, OPMIN=20e6;
+const WK=[{"w": "07 Aug", "cash": 128.4, "ca": 73.4, "fd": 15.0, "mmf": 40.0, "yld": 0.02253, "fx": 0, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "14 Aug", "cash": 130.5, "ca": 75.4, "fd": 15.0, "mmf": 40.1, "yld": 0.02231, "fx": 0.1, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "21 Aug", "cash": 136.9, "ca": 81.7, "fd": 15.0, "mmf": 40.2, "yld": 0.02163, "fx": -0.2, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "28 Aug", "cash": 139.8, "ca": 84.5, "fd": 15.0, "mmf": 40.3, "yld": 0.02136, "fx": 0.1, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "04 Sep", "cash": 148.3, "ca": 92.9, "fd": 15.0, "mmf": 40.4, "yld": 0.02057, "fx": 0.2, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "11 Sep", "cash": 150.0, "ca": 94.5, "fd": 15.0, "mmf": 40.5, "yld": 0.02044, "fx": -0.1, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "18 Sep", "cash": 149.5, "ca": 93.9, "fd": 15.0, "mmf": 40.6, "yld": 0.02051, "fx": 0.1, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "25 Sep", "cash": 151.6, "ca": 75.9, "fd": 15.0, "mmf": 60.7, "yld": 0.02505, "fx": 0.0, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "02 Oct", "cash": 160.3, "ca": 84.4, "fd": 15.0, "mmf": 60.9, "yld": 0.02412, "fx": -0.2, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "09 Oct", "cash": 162.0, "ca": 85.9, "fd": 15.0, "mmf": 61.1, "yld": 0.02399, "fx": 0.1, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "16 Oct", "cash": 169.0, "ca": 92.7, "fd": 15.0, "mmf": 61.3, "yld": 0.02333, "fx": -0.1, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "23 Oct", "cash": 170.9, "ca": 94.4, "fd": 15.0, "mmf": 61.5, "yld": 0.0232, "fx": 0.1, "other": 0, "restr": 0, "n": 24, "sh": 0}, {"w": "30 Oct", "cash": 178.4, "ca": 101.7, "fd": 15.0, "mmf": 61.7, "yld": 0.02256, "fx": 0.0, "other": 0, "restr": 0, "n": 24, "sh": 0}];
+const MONTHEND=[{"d": "31 Aug", "cash": 142.9}, {"d": "30 Sep", "cash": 156.0}, {"d": "31 Oct", "cash": 179.6}];
+const POSR=[{"bank": "Fund provider 1", "type": "Money market fund", "ccy": "USD", "aed": 38.25, "yld": 0.0431, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank A", "type": "Operating account", "ccy": "USD", "aed": 56.99, "yld": 0.015, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Fund provider 2", "type": "Money market fund", "ccy": "USD", "aed": 23.45, "yld": 0.0423, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank B", "type": "Time deposit", "ccy": "USD", "aed": 15.0, "yld": 0.0435, "mat": "15 Jan 2027", "restr": false, "ent": "US (parent)"}, {"bank": "Bank A", "type": "Operating account", "ccy": "USD", "aed": 12.53, "yld": 0.0, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank B", "type": "Operating account", "ccy": "USD", "aed": 12.1, "yld": 0.012, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank C", "type": "Operating account", "ccy": "GBP", "aed": 1.59, "yld": 0.01, "mat": null, "restr": false, "ent": "UK"}, {"bank": "Bank A", "type": "Operating account", "ccy": "USD", "aed": 6.83, "yld": 0.0, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank C", "type": "Operating account", "ccy": "EUR", "aed": 1.22, "yld": 0.0, "mat": null, "restr": false, "ent": "Europe"}, {"bank": "Bank D", "type": "Operating account", "ccy": "SGD", "aed": 0.68, "yld": 0, "mat": null, "restr": false, "ent": "Singapore"}, {"bank": "Bank D", "type": "Operating account", "ccy": "AUD", "aed": 0.47, "yld": 0, "mat": null, "restr": false, "ent": "Australia"}, {"bank": "Bank A", "type": "Operating account", "ccy": "USD", "aed": 2.28, "yld": 0.0, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank B", "type": "Operating account", "ccy": "USD", "aed": 2.14, "yld": 0, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank D", "type": "Operating account", "ccy": "JPY", "aed": 0.38, "yld": 0, "mat": null, "restr": false, "ent": "Japan"}, {"bank": "Bank D", "type": "Operating account", "ccy": "INR", "aed": 0.34, "yld": 0, "mat": null, "restr": false, "ent": "India"}, {"bank": "Bank C", "type": "Operating account", "ccy": "GBP", "aed": 0.33, "yld": 0, "mat": null, "restr": false, "ent": "UK"}, {"bank": "Bank E", "type": "Operating account", "ccy": "ILS", "aed": 0.27, "yld": 0, "mat": null, "restr": false, "ent": "Israel"}, {"bank": "Bank D", "type": "Operating account", "ccy": "SGD", "aed": 0.26, "yld": 0, "mat": null, "restr": false, "ent": "Singapore"}, {"bank": "Bank C", "type": "Operating account", "ccy": "EUR", "aed": 0.16, "yld": 0, "mat": null, "restr": false, "ent": "Europe"}, {"bank": "Bank E", "type": "Operating account", "ccy": "USD", "aed": 0.12, "yld": 0, "mat": null, "restr": false, "ent": "Israel"}, {"bank": "Bank A", "type": "Operating account", "ccy": "USD", "aed": 0.0, "yld": 0, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank A", "type": "Operating account", "ccy": "USD", "aed": 0.0, "yld": 0, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank C", "type": "Operating account", "ccy": "EUR", "aed": 0.0, "yld": 0, "mat": null, "restr": false, "ent": "Europe"}, {"bank": "Bank D", "type": "Operating account", "ccy": "AUD", "aed": 0.0, "yld": 0, "mat": null, "restr": false, "ent": "Australia"}, {"bank": "Bank A", "type": "Operating account", "ccy": "USD", "aed": 1.2, "yld": 0, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank A", "type": "Operating account", "ccy": "USD", "aed": 0.9, "yld": 0, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank B", "type": "Operating account", "ccy": "USD", "aed": 0.5, "yld": 0, "mat": null, "restr": false, "ent": "US (parent)"}, {"bank": "Bank B", "type": "Operating account", "ccy": "EUR", "aed": 0.3, "yld": 0, "mat": null, "restr": false, "ent": "Europe"}, {"bank": "Bank A", "type": "Operating account", "ccy": "GBP", "aed": 0.1, "yld": 0, "mat": null, "restr": false, "ent": "UK"}, {"bank": "Bank A", "type": "Operating account", "ccy": "USD", "aed": 0.0, "yld": 0, "mat": null, "restr": false, "ent": "US (parent)"}];
+const W=WK.map(w=>w.w);
+const CATS=[['Customer receipts','#2f7d4f'],['Other receipts','#7fbf9b'],['Suppliers & contractors','#b8321f'],['Payroll','#d9785f'],['Lease & debt service','#7d2416'],['Tax & government fees','#e7aa9c'],['Uncategorised','#9aa1ab']];
+/* illustrative category pattern, scaled each week so it ties to the real net change */
+const PAT={"Customer receipts": [0.0, 11.9, 10.5, 13.1, 14.3, 11.6, 11.2, 12.3, 15.6, 11.5, 10.9, 12.1, 13.3], "Other receipts": [0.0, 0.5, 0.4, 0.5, 0.6, 0.5, 0.5, 0.5, 0.6, 0.5, 0.5, 0.5, 0.6], "Suppliers & contractors": [0, 4.1, 3.6, 4.4, 5.2, 3.9, 3.7, 4.2, 5.6, 4.0, 3.8, 4.3, 4.9], "Payroll": [0, 6.1, 0, 6.2, 0, 6.1, 0, 6.3, 0, 6.2, 0, 6.2, 0], "Lease & debt service": [0, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9], "Tax & government fees": [0, 0, 0.4, 0, 0.3, 0, 8.4, 0, 0.5, 0, 0.3, 0, 0.4], "Uncategorised": [0, 0.2, 0.3, 0.2, 0.2, 0.3, 0.2, 0.2, 0.3, 0.2, 0.2, 0.3, 0.2]};
+const FIN=WK.map(()=>0), FXT=WK.map(w=>w.fx);
+const ACT={};CATS.forEach(c=>ACT[c[0]]=WK.map(()=>0));
+const R=WK.map((w,i)=>{const o=i?WK[i-1].cash:w.cash;if(!i)return {w:w.w,i,o,r:0,p:0,f:0,x:0,c:w.cash};
+  const op=w.cash-o-FXT[i]-FIN[i];let rec=PAT['Customer receipts'][i]+PAT['Other receipts'][i];if(rec-op<5)rec=op+5;const pay=rec-op;
+  const rs=PAT['Customer receipts'][i]+PAT['Other receipts'][i];ACT['Customer receipts'][i]=rec*PAT['Customer receipts'][i]/rs;ACT['Other receipts'][i]=rec*PAT['Other receipts'][i]/rs;
+  const pk=['Suppliers & contractors','Payroll','Lease & debt service','Tax & government fees','Uncategorised'],ps=pk.reduce((a,k)=>a+PAT[k][i],0);pk.forEach(k=>ACT[k][i]=-pay*PAT[k][i]/ps);
+  return {w:w.w,i,o,r:rec,p:pay,f:FIN[i],x:FXT[i],c:w.cash};});
+const MIX=WK.map(w=>[w.ca/w.cash,w.fd/w.cash,w.mmf/w.cash]);
+const YREL=WK.map(w=>w.yld/WK[WK.length-1].yld);
+const FW=['06 Nov','13 Nov','20 Nov','27 Nov','04 Dec','11 Dec','18 Dec','25 Dec'];
+const FC={receipts:[13.1,12.2,14.0,12.4,16.0,12.3,11.2,9.8],suppliers:[-4.4,-4.0,-4.6,-4.2,-5.5,-4.1,-4.0,-3.6],payroll:[-6.2,0,-6.2,0,-6.3,0,-6.3,0],debt:[0,0,0,0,-0.9,0,0,0],tax:[-0.3,0,-0.4,0,-0.3,0,-8.6,0]};
+const EVENTS=[{n:1,w:'18 Sep',type:'tax',d:'Quarterly US estimated tax payment',eff:-8.4},
+ {n:2,w:'25 Sep',type:'placement',d:'USD 20.0m moved from operating accounts into money market funds (internal move)',eff:0},
+ {n:3,w:'02 Oct',type:'receipts',d:'Quarter-start customer collections',eff:16.2},
+ {n:4,w:'16 Oct',type:'placement',d:'USD 15.0m time deposit rolled for three months (internal move)',eff:0}];
+const BIG=[['18 Sep','IRS EFTPS ESTIMATED TAX','Tax & government fees',-8.4,'Workday report 18 Sep, row 1182'],['11 Sep','PAYROLL US BIWEEKLY','Payroll',-6.1,'Workday report 11 Sep, row 944'],['02 Oct','CUSTOMER RECEIPT Q3 INVOICES','Customer receipts',4.8,'Bank A MT940 02 Oct, line 37'],['02 Oct','CLOUD HOSTING','Suppliers & contractors',-2.6,'Workday report 02 Oct, row 215'],['04 Sep','CUSTOMER RECEIPT AUG INVOICES','Customer receipts',3.9,'Bank A MT940 04 Sep, line 22']];
+const PLACED_SH=WK[WK.length-1].sh;
+
+/* ---------------- calculations (in the pilot: tested scripts, not the page) ---------------- */
+const cats=CATS.map(c=>c[0]);
+const LAST=R[R.length-1];
+const ACC=POSR.map((p,k)=>({id:'masked',bank:p.bank,type:p.type,ccy:p.ccy,aed:p.aed,yld:p.yld,mat:p.mat,restr:p.restr,ent:p.ent}));
+const ents=[...new Set(ACC.map(a=>a.ent))].map(e=>({ent:e,aed:ACC.filter(a=>a.ent===e).reduce((s,x)=>s+x.aed,0)})).sort((a,b)=>b.aed-a.aed);
+const restricted=ACC.filter(a=>a.restr).reduce((a,x)=>a+x.aed,0);
+const avail=LAST.c;
+const wy=ACC.reduce((a,x)=>a+x.aed*x.yld,0)/ACC.reduce((a,x)=>a+x.aed,0);
+const idleNow=Math.max(0,ACC.filter(a=>a.type==='Operating account'&&a.yld===0).reduce((a,x)=>a+x.aed,0)-OPMIN/1e6);
+const banks=[...new Set(ACC.map(a=>a.bank))].map(b=>({bank:b,aed:ACC.filter(a=>a.bank===b).reduce((s,x)=>s+x.aed,0)})).sort((a,b)=>b.aed-a.aed);banks.forEach(b=>b.share=b.aed/LAST.c);
+const ccys=[...new Set(ACC.map(a=>a.ccy))].map(c=>({ccy:c,aed:ACC.filter(a=>a.ccy===c).reduce((s,x)=>s+x.aed,0)})).sort((a,b)=>b.aed-a.aed);ccys.forEach(c=>c.share=c.aed/LAST.c);
+const wkOf=d=>{const x=new Date(d+' UTC');for(let i=0;i<FW.length;i++){const fe=new Date(FW[i]+' 2026 UTC');if(x<=fe&&x>new Date(fe.getTime()-7*864e5))return i;}return -1;};
+const fdMat=FW.map((w,i)=>ACC.filter(a=>a.mat&&wkOf(a.mat)===i).reduce((s,x)=>s+x.aed,0));
+const zeroPos=ACC.filter(a=>a.aed<0.005).length;
+const fridaysBelow=R.filter(r=>r.c<BUF/1e6).length, withMonthEnd=fridaysBelow+MONTHEND.filter(m=>m.cash<BUF/1e6).length;
+const LEV=[['receipts','Receipts',30],['suppliers','Supplier payments',30],['payroll','Payroll',20],['tax','Tax and fees',20],['debt','Lease and debt service',20]];
+const state={sub:'extras',view:'summary',lv:{receipts:0,suppliers:0,payroll:0,tax:0,debt:0},hb:'cash',bank:null,q:''};
+function fcPath(lv){let v=LAST.c;return FW.map((w,i)=>{const r=FC.receipts[i]*(1+lv.receipts/100),s=FC.suppliers[i]*(1+lv.suppliers/100),p=FC.payroll[i]*(1+lv.payroll/100),t=FC.tax[i]*(1+lv.tax/100),d=FC.debt[i]*(1+((lv.debt||0))/100);const net=r+s+p+t+d;v+=net;return {w,net,v,r,s,p,t,d};});}
+const BASE=fcPath({receipts:0,suppliers:0,payroll:0,tax:0});
+const lowOf=a=>a.reduce((m,x)=>x.v<m.v?x:m);
+
+/* ---------------- helpers ---------------- */
+const $=s=>document.querySelector(s);
+const f1=v=>Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1});
+const m1=v=>(v<0?'-':'')+f1(v)+'m', aed=v=>'USD '+m1(v), sg=v=>(v>=0?'+':'-')+f1(v), pc=(x,d=0)=>(x*100).toFixed(d)+'%';
+const ASKI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/><path d="M9.5 10a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1.9-1.1 1.6"/><circle cx="12" cy="16.6" r=".6" fill="currentColor"/></svg>';
+const ask=q=>`<span class="ask" data-ask="${q.replace(/"/g,'&quot;')}">${ASKI}Ask</span>`;
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(window._tt);window._tt=setTimeout(()=>e.style.display='none',2600);}
+function niceAxis(vals,n){let mn=Math.min(0,...vals),mx=Math.max(0,...vals);if(mx>0)mx*=1.04;if(mn<0)mn*=1.04;const raw=(mx-mn)/(n||4),mag=Math.pow(10,Math.floor(Math.log10(raw))),f=raw/mag,step=(f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*mag;const lo=Math.floor(mn/step+1e-9)*step,hi=Math.ceil(mx/step-1e-9)*step,t=[];for(let v=lo;v<=hi+step/2;v+=step)t.push(Math.abs(v)<1e-9?0:v);return{lo,hi,ticks:t};}
+
+/* ---------------- views ---------------- */
+const VIEWS=[['summary','Summary','p'],['history','History','p'],['movements','Movements','p'],['forecast','Forecast','p'],['liquidity','Liquidity','p'],['accounts','Positions','p'],['exceptions','Exceptions','p'],['onepager','CFO one-pager','p'],['ideas','Ideas','i']];
+const SUBS=[['extras','Event log'],['ideas','All ideas']];
+const SCOPE={p:['Pilot','In the pilot: position and history'],o:['Extension','Pilot extension: can be added once the pilot runs, quoted separately'],r:['Roadmap','Roadmap: later steps or extra data']};
+function alerts(){
+  const lowB=lowOf(BASE), big=BASE.reduce((m,x)=>x.net<m.net?x:m);
+  return [
+   {ext:1,sev:'warning',t:`Forecast week of ${big.w}: net outflow ${aed(-big.net)}`,s:`illustrative forecast; lowest point ${aed(lowB.v)} in ${lowB.w}`,age:'new',own:'Treasury',type:'forecast'},
+   {sev:'warning',t:'2 accounts without a statement since 28 Oct',s:'Bank E, ILS and USD accounts; balances shown as of 28 Oct and not checked',age:'new',own:'Treasury',type:'stale'},
+   {sev:'warning',t:'1 account in bank statements but not in the account register',s:'Bank D, SGD, USD 0.4m; not counted in cash until registered',age:'open 3 weeks',own:'Treasury',type:'register'},
+   {sev:'warning',t:`${banks[0].bank} holds ${pc(banks[0].share)} of cash`,s:`top three ${banks.slice(0,3).map(b=>b.bank).join(', ')}: ${pc(banks[0].share+banks[1].share+banks[2].share)}; no counterparty limits in the pilot data`,age:'',own:'Treasury',type:'concentration'},
+   {sev:'info',t:`${zeroPos} accounts carry no balance`,s:'confirm whether they stay open',age:'',own:'Treasury',type:'register'},
+   {ext:1,sev:'info',t:`${aed(fdMat.slice(0,4).reduce((a,b)=>a+b,0))} of deposits mature in the next 4 weeks`,s:'roll-over decision before the forecast low point',age:'',own:'Treasury',type:'maturity'},
+   {sev:'ok',t:'Bank A USD payroll account overdrawn on 16 Oct (USD 0.2m)',s:'covered by a same-day transfer; cleared 17 Oct',age:'resolved',own:'Treasury',type:'overdraft'},
+   {sev:'ok',t:'Balance check failed for a Bank C EUR account, 14 Oct',s:'statement re-sent by the bank; resolved 16 Oct',age:'resolved',own:'Treasury',type:'balance'}];
+}
+function attHtml(max){return alerts().filter(a=>a.sev!=='ok'&&!a.ext).slice(0,max).map(a=>`<div class="att"><span class="dot ${a.sev==='warning'?'':a.sev}"></span><div><b>${a.t}</b>${a.ext?'<span class="sg">extension</span>':''} <span class="mut">${a.s}${a.age?' · '+(a.age==='new'?'<b style="color:var(--red)">new</b>':a.age):''}</span></div>${ask('Explain: '+a.t)}</div>`).join('');}
+function barsHtml(){const mx=banks[0].aed;return banks.map(b=>`<div class="bar ${state.bank===b.bank?'sel':''}" data-bank="${b.bank}"><span class="lbl">${b.bank}</span><span class="trk"><span class="fill" style="width:${b.aed/mx*100}%"></span></span><span class="v">${f1(b.aed)}</span></div>`).join('');}
+
+function lineChart(opt){
+  const {past,fc,wi,events,W:Wd,H:Ht,id,buf,live,dom}=opt; const L=50,Rr=14,T=16,B=28;
+  const labels=past.map(p=>p.w).concat(fc?fc.map(p=>p.w):[]), n=labels.length;
+  const vals=past.map(p=>p.v).concat(fc?fc.map(p=>p.v):[]).concat(wi?wi.map(p=>p.v):[]).concat(buf?[buf]:[]);
+  const ax=dom||niceAxis(vals,4),X=i=>L+i*(Wd-L-Rr)/(n-1),Y=v=>T+(ax.hi-v)/(ax.hi-ax.lo)*(Ht-T-B);let g='';
+  ax.ticks.forEach(v=>g+=`<line x1="${L}" x2="${Wd-Rr}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v===0?'#6f7480':'#e6e9ee'}"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${v.toFixed(0)}</text>`);
+  const tn=past.length-1;
+  if(fc){g+=`<rect x="${X(tn)}" y="${T}" width="${Wd-Rr-X(tn)}" height="${Ht-T-B}" fill="var(--wash)" opacity=".8"/><text x="${X(tn)+6}" y="${T+12}" style="font-size:11px">Treasury forecast as provided</text>`;}
+  g+=`<line x1="${X(tn)}" x2="${X(tn)}" y1="${T}" y2="${Ht-B}" stroke="#14202e" stroke-dasharray="3 3" opacity=".5"/><text x="${X(tn)-6}" y="${T+12}" text-anchor="end" style="font-size:11px">today</text>`;
+  if(buf){g+=`<rect x="${L}" y="${Y(buf)}" width="${Wd-L-Rr}" height="${Math.max(0,Y(ax.lo)-Y(buf))}" fill="#b8321f" opacity=".05"/><line x1="${L}" x2="${Wd-Rr}" y1="${Y(buf)}" y2="${Y(buf)}" stroke="#b7791f" stroke-dasharray="4 4"/><text x="${L+4}" y="${Y(buf)-5}" fill="#b7791f">liquidity buffer</text>`;}
+  const CXo=(window.CX&&CX[id]&&CX[id]())||{};
+  if(CXo.band&&buf){/* E2 buffer band: green above the buffer, red below */
+    const pl=past.map((p,i)=>X(i)+','+Y(p.v)).join(' '),bp=`${X(tn)},${Y(buf)} ${X(0)},${Y(buf)}`;
+    g+=`<defs><clipPath id="${id}_ca"><rect x="0" y="0" width="${Wd}" height="${Y(buf)}"/></clipPath><clipPath id="${id}_cb"><rect x="0" y="${Y(buf)}" width="${Wd}" height="${Ht}"/></clipPath></defs>`;
+    g+=`<polygon points="${pl} ${bp}" fill="#2f7d4f" opacity=".14" clip-path="url(#${id}_ca)"/><polygon points="${pl} ${bp}" fill="#b8321f" opacity=".2" clip-path="url(#${id}_cb)"/>`;
+  } else g+=`<polygon points="${X(0)},${Y(Math.max(ax.lo,0))} ${past.map((p,i)=>X(i)+','+Y(p.v)).join(' ')} ${X(tn)},${Y(Math.max(ax.lo,0))}" fill="var(--sand)" opacity=".22"/>`;
+  g+=`<polyline fill="none" stroke="#14202e" stroke-width="2" points="${past.map((p,i)=>X(i)+','+Y(p.v)).join(' ')}"/>`;
+  if(fc)g+=`<polyline fill="none" stroke="#8b909a" stroke-width="2" stroke-dasharray="6 4" points="${[past[tn]].concat(fc).map((p,i)=>X(tn+i)+','+Y(p.v)).join(' ')}"/>`;
+  if(wi&&!live)g+=`<polyline fill="none" stroke="var(--acc)" stroke-width="2.2" points="${[past[tn]].concat(wi).map((p,i)=>X(tn+i)+','+Y(p.v)).join(' ')}"/>`;
+  if(live){g+=`<g id="${id}_wg" style="opacity:0;transition:opacity .45s ease"><polygon id="${id}_wp" points="" opacity=".16"/><polyline id="${id}_wl" fill="none" stroke="var(--acc)" stroke-width="2.4" stroke-linejoin="round" points=""/>${fc.map((p,k)=>`<circle id="${id}_wc${k}" cx="${X(tn+1+k)}" cy="0" r="3.4" fill="var(--acc)" stroke="#fff" stroke-width="1.2"/>`).join('')}<text id="${id}_wd" text-anchor="end" font-weight="600" style="font-size:11.5px"></text></g>`;}
+  past.forEach((p,i)=>{if(buf&&p.v<buf)g+=`<circle cx="${X(i)}" cy="${Y(p.v)}" r="3.5" fill="#b8321f"/>`;});
+  (events||[]).forEach(e=>{const i=past.findIndex(p=>p.w===e.w);if(i<0)return;const col=e.eff>0?'#2f7d4f':e.eff<0?'#b8321f':'#6f7480';g+=`<g><circle cx="${X(i)}" cy="${Y(past[i].v)}" r="9" fill="${col}" stroke="#fff" stroke-width="1.5"/><text x="${X(i)}" y="${Y(past[i].v)+3.5}" text-anchor="middle" style="fill:#fff;font-size:10px;font-weight:700">${e.n}</text></g>`;});
+  (CXo.notes||[]).forEach(nt=>{/* E1 chart notes */const i=past.findIndex(p=>p.w===nt.w);if(i<0)return;const x=X(i),y=Y(past[i].v),up=nt.pos!=='below',ty=up?y-30:y+34,tw=nt.t.length*6.1+14,tx=Math.max(L+2,Math.min(Wd-Rr-tw,x-tw/2));
+    g+=`<line x1="${x}" y1="${y+(up?-5:5)}" x2="${x}" y2="${ty+(up?6:-12)}" stroke="#14202e" stroke-width=".8" opacity=".5"/><rect x="${tx}" y="${ty-12}" width="${tw}" height="18" rx="9" fill="#fff" stroke="${nt.c||'#14202e'}" stroke-width=".9"/><text x="${tx+tw/2}" y="${ty+1}" text-anchor="middle" style="font-size:10.5px;font-weight:600;fill:${nt.c||'#14202e'}">${nt.t}</text>`;});
+  (CXo.flags||[]).forEach(fl=>{/* E7 data-quality marks */const i=past.findIndex(p=>p.w===fl.w);if(i<0)return;const x=X(i),y=Y(past[i].v)+16;g+=`<g><path d="M${x} ${y-7} L${x+7} ${y+5} L${x-7} ${y+5}Z" fill="#b7791f"/><text x="${x}" y="${y+3.5}" text-anchor="middle" style="fill:#fff;font-size:9px;font-weight:700">!</text></g>`;});
+  if(CXo.pick!=null&&CXo.pick<=tn){const x=X(CXo.pick);g+=`<line x1="${x}" x2="${x}" y1="${T}" y2="${Ht-B}" stroke="var(--acc)" stroke-width="1.5" opacity=".55"/>`;}
+  const st=Math.ceil(n/9);labels.forEach((l,i)=>{if(i%st===0||i===n-1)g+=`<text x="${X(i)}" y="${Ht-8}" text-anchor="middle">${l}</text>`;});
+  g+=`<line id="${id}_g" x1="0" x2="0" y1="${T}" y2="${Ht-B}" stroke="#14202e" opacity="0"/>`;
+  const anim={cur:null,raf:0,paint(vals){const q=k=>document.getElementById(id+'_'+k);if(!q('wl'))return;const pts=[past[tn].v].concat(vals).map((v,i)=>X(tn+i)+','+Y(Math.max(ax.lo,Math.min(ax.hi,v)))).join(' ');
+      const bpts=[past[tn].v].concat(fc.map(p=>p.v)).map((v,i)=>X(tn+i)+','+Y(v)).reverse().join(' ');const last=vals[vals.length-1],bl=fc[fc.length-1].v,up=last>=bl;
+      q('wl').setAttribute('points',pts);q('wp').setAttribute('points',pts+' '+bpts);q('wp').setAttribute('fill',up?'#2f7d4f':'#b8321f');
+      vals.forEach((v,k)=>{const c=q('wc'+k);c.setAttribute('cy',Y(Math.max(ax.lo,Math.min(ax.hi,v))));c.setAttribute('fill',buf&&v<buf?'#b8321f':'var(--acc)');});
+      const d=q('wd');d.setAttribute('x',Wd-Rr-2);d.setAttribute('y',Y(last)+(up?-9:17));d.setAttribute('fill',up?'#2f7d4f':'#b8321f');d.textContent=(last-bl>=0?'+':'-')+Math.abs(last-bl).toFixed(0)+'m';},
+    set(vals,active,dur){dur=dur==null?650:dur;cancelAnimationFrame(anim.raf);const g=document.getElementById(id+'_wg');if(g)g.style.opacity=active?1:0;
+      const from=anim.cur||fc.map(p=>p.v),t0=performance.now(),ease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+      const fr=now=>{const k=dur?Math.min(1,(now-t0)/dur):1,e=ease(k);anim.cur=from.map((a,i)=>a+(vals[i]-a)*e);anim.paint(anim.cur);if(k<1)anim.raf=requestAnimationFrame(fr);};
+      if(!dur){anim.cur=vals.slice();anim.paint(anim.cur);}else anim.raf=requestAnimationFrame(fr);}};
+  return {anim,svg:`<svg id="${id}" viewBox="0 0 ${Wd} ${Ht}" width="100%">${g}</svg>`,wire(read,idle){const s=$('#'+id),rd=$('#'+read),gl=$('#'+id+'_g');if(!s)return;rd.innerHTML=idle;
+    s.onmousemove=ev=>{const r=s.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width*Wd;let i=Math.round((x-L)/((Wd-L-Rr)/(n-1)));i=Math.max(0,Math.min(n-1,i));gl.setAttribute('x1',X(i));gl.setAttribute('x2',X(i));gl.setAttribute('opacity','.3');
+      if(i<=tn){const p=past[i],r0=R.find(r=>r.w===p.w),ev2=(events||[]).find(e=>e.w===p.w);rd.innerHTML=`<b>${p.w}</b>: ${aed(p.v)}${r0?` <span class="mut">(receipts ${f1(r0.r)}, payments ${f1(r0.p)}${r0.f?', financing '+f1(r0.f):''})</span>`:''}${ev2?`<br><span class="mut">#${ev2.n} ${ev2.d}</span>`:''}${buf?` <span class="mut">· headroom ${sg(p.v-buf)}m</span>`:''}${(CXo.flags||[]).filter(fl=>fl.w===p.w).map(fl=>`<br><span style="color:#b7791f">&#9888; ${fl.t}</span>`).join('')}`;}
+      else{const k=i-tn-1,b=fc[k],w2=live?(live.act?{v:live.v[k]}:null):wi&&wi[k];rd.innerHTML=`<b>${b.w}</b>: ${aed(w2?w2.v:b.v)} <span class="mut">${w2?'what-if, against '+aed(b.v)+' as forecast':'forecast as provided, net '+sg(b.net)+'m'}</span>`;}};
+    const mv=s.onmousemove;s.onmousemove=ev=>{mv(ev);tipShow(ev,rd.innerHTML);};/* E9 floating hover card */
+    if(CXo.onPick)s.onclick=ev=>{const r=s.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width*Wd;let i=Math.round((x-L)/((Wd-L-Rr)/(n-1)));if(i<=tn)CXo.onPick(i);};/* E4 */
+    if(CXo.onPick)s.style.cursor='pointer';
+    s.onmouseleave=()=>{gl.setAttribute('opacity','0');rd.innerHTML=typeof idle==='function'?idle():idle;tipHide();};}};
+}
+function renderSummary(){
+  const prev=R[R.length-2], lowB=lowOf(BASE);
+  const ch=lineChart({past:R.map(r=>({w:r.w,v:r.c})),W:1000,H:260,id:'sc',buf:BUF/1e6});
+  $('#view').innerHTML=`
+  <div class="eyebrow">As of ${AS_OF} &nbsp;|&nbsp; ${ACC.length-2} of ${ACC.length} accounts with a current statement &nbsp;|&nbsp; reconciled to bank statements</div>
+  <h1 class="hero">${aed(avail)} available liquidity.</h1>
+  <p class="sub">${aed(avail-BUF/1e6)} above the USD 125m minimum liquidity buffer (assumption). ${pc(MIX[12][0])} in operating accounts, ${pc(MIX[12][1])} in time deposits, ${pc(MIX[12][2])} in money market funds.</p>
+  <p class="sub" style="font-size:13.5px;margin-top:2px">Since ${prev.w}: cash <b class="${LAST.c-prev.c<0?'neg':''}">${sg(LAST.c-prev.c)}m</b>, ${(n=>n+' new alert'+(n===1?'':'s'))(alerts().filter(x=>!x.ext&&x.age==='new').length)}, 1 resolved. <span class="lnk" data-go="exceptions">What changed</span></p>
+  <div class="brief"><div class="tag">Briefing · AI-written, every number checked against the data</div>
+   <p>Since 07 Aug cash rose by ${aed(LAST.c-R[0].c)} from operating flows: receipts averaged ${aed(R.slice(1).reduce((a,r)=>a+r.r,0)/12)} a week against payments of ${aed(R.slice(1).reduce((a,r)=>a+r.p,0)/12)}.</p>
+   <p>Cash stayed above the buffer every Friday. The quarterly estimated tax of USD 8.4m on 18 Sep was the largest single outflow.</p></div>
+  <div style="margin-top:18px">${ch.svg}<div class="read" id="sread"></div></div>
+  <section><h2>Needs attention</h2>${attHtml(4)}<p class="note" style="margin-top:10px"><span class="lnk" data-go="exceptions">All exceptions</span><span class="mut" style="margin-left:10px">"Ask" copies the question so you can put it to Claude together with these figures.</span></p></section>
+  <section><div class="cols"><div><h2>Where the cash is</h2>${barsHtml()}<p class="note" style="margin-top:8px">Closing cash by bank, USD m. Click a bank to see its positions.</p></div>
+  <div><h2>Cash by instrument</h2><table><tr><th>USD m</th><th class="n">Now</th><th class="n">4 weeks ago</th><th class="n">Change</th></tr>${[['Operating accounts',0],['Time deposits',1],['Money market funds',2]].map(([l,k])=>{const a=LAST.c*MIX[12][k],b=R[8].c*MIX[8][k];return `<tr><td>${l}</td><td class="n">${f1(a)}</td><td class="n">${f1(b)}</td><td class="n ${a-b<0?'neg':''}">${sg(a-b)}</td></tr>`;}).join('')}<tr class="tot"><td><b>Cash</b></td><td class="n"><b>${f1(LAST.c)}</b></td><td class="n">${f1(R[8].c)}</td><td class="n">${sg(LAST.c-R[8].c)}</td></tr></table><p class="note" style="margin-top:8px">Forecast and what-if: <span class="lnk" data-go="forecast">Forecast tab</span>. Headroom and maturities: <span class="lnk" data-go="liquidity">Liquidity tab</span>.</p></div></div></section>
+  <section><h2>Cash by entity</h2>${ents.map(e=>`<div class="sbar"><span>${e.ent}</span><span class="trk"><span class="fill" style="width:${(e.aed/LAST.c*100).toFixed(1)}%;background:#6b7a8f"></span></span><span class="n">${pc(e.aed/LAST.c)} · ${aed(e.aed)}</span></div>`).join('')}<p class="note" style="margin-top:6px">Entities are simulated. Click Positions to filter accounts by entity.</p></section>`;
+  ch.wire('sread','Closing cash on fixed Fridays, USD m, against the liquidity buffer. Hover for any week.');
+}
+function renderHistory(){
+  const ser=state.hb==='cash'?R.map(r=>({w:r.w,v:r.c})):R.map(r=>({w:r.w,v:r.c*MIX[r.i][{ca:0,fd:1,mmf:2}[state.hb]]}));
+  const ch=lineChart({past:ser,W:760,H:290,id:'hc',buf:state.hb==='cash'?BUF/1e6:null});
+  const ago=[0,1,4,8,12].map(k=>R[12-k]);
+  const rowsT=[['Cash',r=>r.c],['Operating accounts',r=>r.c*MIX[r.i][0]],['Time deposits',r=>r.c*MIX[r.i][1]],['Money market funds',r=>r.c*MIX[r.i][2]]];
+  $('#view').innerHTML=`<div class="eyebrow">History from bank statements: 12 months at month-end, the last 10 business days daily, and 13 weeks on fixed Fridays. As of ${AS_OF}.</div>
+  <h1 class="hero" style="font-size:26px;margin:0 0 8px">Cash ended ${aed(LAST.c-R[0].c)} higher than on 07 Aug, from steady collections.</h1>
+  <p class="sub" style="margin:2px 0">Lowest ${aed(Math.min(...R.map(r=>r.c)))} on 07 Aug, highest ${aed(LAST.c)} on 30 Oct.</p>
+  <div class="presets" style="margin:14px 0 6px">${[['cash','Cash'],['ca','Operating accounts'],['fd','Time deposits'],['mmf','Money market funds']].map(b=>`<span class="chip hb ${state.hb===b[0]?'on':''}" data-hb="${b[0]}">${b[1]}</span>`).join('')}${ask('What drove the biggest moves in cash over the last 13 weeks?')}</div>
+  ${ch.svg}<div class="read" id="hread"></div>
+  <section><h2>Then and now</h2><table><tr><th>USD m</th><th class="n">Now</th><th class="n">1 week ago</th><th class="n">4 weeks</th><th class="n">8 weeks</th><th class="n">12 weeks</th><th class="n">Change vs 12 weeks</th></tr>${rowsT.map((t,k)=>{const v=ago.map(t[1]);return `<tr class="${k===0?'tot':''}"><td>${k===0?'<b>'+t[0]+'</b>':t[0]}</td>${v.map(x=>`<td class="n">${f1(x)}</td>`).join('')}<td class="n ${v[0]-v[4]<0?'neg':''}">${sg(v[0]-v[4])}</td></tr>`;}).join('')}</table></section>
+  <section><h2>Weekly bridge (USD m)</h2><table><tr><th>Week</th><th class="n">Opening</th><th class="n">Receipts</th><th class="n">Payments</th><th class="n">Financing</th><th class="n">FX</th><th class="n">Closing</th></tr>${R.map(r=>`<tr><td>${r.w}</td><td class="n">${f1(r.o)}</td><td class="n">${f1(r.r)}</td><td class="n neg">-${f1(r.p)}</td><td class="n">${r.f?f1(r.f):'<span class="mut">-</span>'}</td><td class="n">${sg(r.x)}</td><td class="n ${r.c<BUF/1e6?'neg':''}"><b>${f1(r.c)}</b></td></tr>`).join('')}</table><p class="note" style="margin-top:8px">Opening, closing and FX are from your bank statement data; receipts and payments come from statement transactions (simulated here). FX is the translation of non-USD balances (GBP, EUR, AUD and others) into USD.</p></section>`;
+  fold({'Then and now':['Then and now','today against 1, 4, 8 and 12 weeks ago'],'Weekly bridge':['Weekly bridge','opening to closing, every week']});
+  ch.wire('hread','Hover the chart for any week.');
+  document.querySelectorAll('.hb').forEach(c=>c.onclick=()=>{state.hb=c.dataset.hb;render();});
+}
+function renderMovements(){
+  const RM=R.slice(1);
+  const w=1000,h=300,L=46,Rr=10,T=12,B=28,n=RM.length,bw=(w-L-Rr)/n;
+  const up=RM.map(r=>cats.reduce((a,c)=>a+Math.max(0,ACT[c][r.i]),0)),dn=RM.map(r=>cats.reduce((a,c)=>a+Math.min(0,ACT[c][r.i]),0));
+  const ax=niceAxis(up.concat(dn),5),Y=v=>T+(ax.hi-v)/(ax.hi-ax.lo)*(h-T-B);let g='';
+  ax.ticks.forEach(v=>g+=`<line x1="${L}" x2="${w-Rr}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v===0?'#6f7480':'#e6e9ee'}"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${v}</text>`);
+  RM.forEach((r,i)=>{let u=0,d=0;const x=L+i*bw+bw*.22,ww=bw*.56;CATS.forEach(([c,col])=>{const v=ACT[c][r.i];if(v>0){g+=`<rect x="${x}" y="${Y(u+v)}" width="${ww}" height="${Y(u)-Y(u+v)}" fill="${col}"><title>${r.w} ${c}: ${sg(v)}m</title></rect>`;u+=v}else if(v<0){g+=`<rect x="${x}" y="${Y(d)}" width="${ww}" height="${Y(d+v)-Y(d)}" fill="${col}"><title>${r.w} ${c}: ${sg(v)}m</title></rect>`;d+=v}});
+   const net=r.r-r.p;g+=`<line x1="${x-3}" x2="${x+ww+3}" y1="${Y(net)}" y2="${Y(net)}" stroke="#14202e" stroke-width="2.4"><title>${r.w} operating net ${sg(net)}m</title></line><text x="${x+ww/2}" y="${h-8}" text-anchor="middle">${r.w}</text>`;});
+  const totals=cats.map(c=>[c,RM.reduce((a,r)=>a+ACT[c][r.i],0)]),gin=totals.filter(t=>t[1]>0).reduce((a,t)=>a+t[1],0),gout=-totals.filter(t=>t[1]<0).reduce((a,t)=>a+t[1],0);
+  $('#view').innerHTML=`<div class="eyebrow">Receipts and payments, 12 weeks to 30 Oct, from bank statement transactions. Transfers between own accounts and placements into deposits or funds are excluded.</div>
+  <h1 class="hero" style="font-size:26px;margin:0 0 8px">Receipts ran ${aed(gin-gout)} ahead of payments, ${aed((gin-gout)/12)} a week on average.</h1>
+  <p class="sub">Suppliers and contractors are ${pc(-totals[2][1]/gout)} of payments; US payroll runs every other week.</p>
+  <div style="margin-top:14px"><svg viewBox="0 0 ${w} ${h}" width="100%">${g}</svg><div class="presets" style="font-size:12px;color:var(--mut)">${CATS.map(([c,col])=>`<span><i style="display:inline-block;width:10px;height:10px;background:${col};margin-right:5px;vertical-align:-1px"></i>${c}</span>`).join('')}<span><i style="display:inline-block;width:14px;height:2px;background:#14202e;margin-right:5px;vertical-align:3px"></i>Operating net</span></div></div>
+  <section><div class="cols"><div><h2>By category, 12 weeks (USD m)</h2><table><tr><th>Category</th><th class="n">Total</th><th class="n">Per week</th><th class="n">Share</th></tr>${totals.map(t=>`<tr><td>${t[0]}</td><td class="n ${t[1]<0?'neg':''}">${sg(t[1])}</td><td class="n">${sg(t[1]/12)}</td><td class="n mut">${pc(Math.abs(t[1])/(t[1]>0?gin:gout))}</td></tr>`).join('')}<tr class="tot"><td><b>Operating net</b></td><td class="n ${gin-gout<0?'neg':'pos'}"><b>${sg(gin-gout)}</b></td><td class="n">${sg((gin-gout)/12)}</td><td></td></tr></table><p class="note" style="margin-top:8px">Categories come from agreed rules on the bank narrative. Anything the rules cannot place stays "Uncategorised" and is listed for review, never guessed.</p></div>
+  <div><h2>Receipts against payments</h2><table><tr><th>USD m</th><th class="n">Receipts</th><th class="n">Payments</th><th class="n">Net</th></tr>${RM.slice(-6).map(r=>`<tr><td>${r.w}</td><td class="n">${f1(r.r)}</td><td class="n neg">-${f1(r.p)}</td><td class="n ${r.r-r.p<0?'neg':''}">${sg(r.r-r.p)}</td></tr>`).join('')}</table><p class="note" style="margin-top:8px">Last six weeks, operating flows only; financing shown separately in History.</p></div></div></section>
+  <section><h2>Largest movements</h2><table><tr><th>Week</th><th>Narrative</th><th>Category</th><th class="n">USD m</th><th>Source</th></tr>${BIG.map(b=>`<tr><td>${b[0]}</td><td><span style="font-family:Consolas,monospace;font-size:12px">${b[1]}</span></td><td>${b[2]}</td><td class="n ${b[3]<0?'neg':''}">${sg(b[3])}</td><td class="mut">${b[4]}</td></tr>`).join('')}</table><p class="note" style="margin-top:8px">Transactions above a threshold you set, each traced to the source file and row (simulated sources).</p></section>`;
+}
+let OUT_DOM=null;
+function outDom(){if(OUT_DOM)return OUT_DOM;const vals=R.slice(-6).map(r=>r.c).concat(BASE.map(b=>b.v),[BUF/1e6]);
+  for(let m=0;m<16;m++){const lv={};LEV.forEach((l,i)=>lv[l[0]]=((m>>i)&1?l[2]:-l[2])*0.6);fcPath(lv).forEach(x=>vals.push(x.v));}
+  return OUT_DOM=niceAxis(vals,4);}
+function outlookText(){
+  const lv=state.lv,wi=fcPath(lv),act=LEV.some(l=>lv[l[0]]),lo=lowOf(wi),lb=lowOf(BASE),below=wi.filter(x=>x.v<BUF/1e6);
+  const word=(k,v)=>({receipts:'receipts',suppliers:'supplier payments',payroll:'payroll',tax:'tax and fees',debt:'lease and debt service'}[k])+' '+Math.abs(v)+'% '+(v>0?'higher':'lower');
+  const lt=LEV.filter(l=>lv[l[0]]).map(l=>word(l[0],lv[l[0]])).join(' and ');
+  return {wi,act,
+   hero:`${below.length?`Cash falls below the buffer in ${below.length} week${below.length>1?'s':''}`:'Cash stays above the buffer for 8 weeks'}${act?' in this what-if':''}.`,
+   sub:act?`What-if: ${lt}. Lowest point ${aed(lo.v)} in the week of ${lo.w}, against ${aed(lb.v)} as forecast; position on ${wi[7].w} changes by <b class="${wi[7].v-BASE[7].v<0?'neg':''}">${sg(wi[7].v-BASE[7].v)}m</b>.`:`Lowest point ${aed(lb.v)} in the week of ${lb.w}. Move a slider to test a change against the forecast as provided.`,
+   tbl:`<tr><th>Week</th>${act?'<th class="n">As forecast</th><th class="n">What-if</th><th class="n">Change</th>':'<th class="n">Receipts</th><th class="n">Payments</th><th class="n">Closing</th>'}</tr>${wi.map((x,i)=>act?`<tr><td>${x.w}</td><td class="n">${f1(BASE[i].v)}</td><td class="n ${x.v<BUF/1e6?'neg':''}">${f1(x.v)}</td><td class="n ${x.v-BASE[i].v<0?'neg':''}">${sg(x.v-BASE[i].v)}</td></tr>`:`<tr><td>${x.w}</td><td class="n">${f1(x.r)}</td><td class="n neg">${f1(x.s+x.p+x.t+x.d)}</td><td class="n ${x.v<BUF/1e6?'neg':''}"><b>${f1(x.v)}</b></td></tr>`).join('')}`};
+}
+const lvLab=v=>v>0?v+'% higher':v<0?(-v)+'% lower':'as forecast';
+function renderOutlook(){
+  const o=outlookText(), live={act:o.act,v:o.wi.map(x=>x.v)};
+  const ch=lineChart({past:R.slice(-6).map(r=>({w:r.w,v:r.c})),fc:BASE.map(b=>({w:b.w,v:b.v,net:b.net})),live,dom:outDom(),W:520,H:250,id:'oc',buf:BUF/1e6});
+  $('#view').innerHTML=`<div class="eyebrow">Treasury's 8-week forecast (illustrative figures) laid over today's cash from your bank statement data. Not a forecast model; what-ifs are never stored. Scenario levers apply where your forecast has these categories.</div>
+  <h1 class="hero" id="o_hero" style="font-size:34px;margin:0">${o.hero}</h1>
+  <p class="sub" id="o_sub" style="margin-top:4px;min-height:46px">${o.sub}</p>
+  <div class="cols" style="margin-top:18px"><div>
+   <div style="font-size:13px;margin:0 0 6px"><b>What-if</b> <span class="mut">Drag a slider; the forecast as provided does not change.</span></div>
+   ${LEV.map(l=>`<div class="scen"><label>${l[1]}: <b id="lvl_${l[0]}">${lvLab(state.lv[l[0]])}</b></label><input type="range" data-lv="${l[0]}" min="-${l[2]}" max="${l[2]}" step="5" value="${state.lv[l[0]]}"></div>`).join('')}
+   <div class="presets"><span class="chip" data-preset='{"receipts":-15}'>Receipts -15%</span><span class="chip" data-preset='{"receipts":-10,"suppliers":10}'>Late collections, higher spend</span><span class="chip" data-preset='{"suppliers":-10}'>Spend -10%</span><span class="chip" data-preset='{}'>Reset</span></div>
+   ${ch.svg}<div class="read" id="oread"></div><div class="legend" style="font-size:11.5px;color:var(--mut);margin-top:2px"><span style="display:inline-block;width:18px;border-top:2px dashed #8b909a;vertical-align:3px;margin-right:5px"></span>Forecast as provided <span style="display:inline-block;width:18px;border-top:2.4px solid var(--acc);vertical-align:3px;margin:0 5px 0 14px"></span>What-if</div></div>
+   <div><h2>Week by week (USD m)</h2><table id="o_tbl">${o.tbl}</table>
+   <h2 style="margin-top:22px">How reliable is the forecast?</h2><p class="note">Forecast against actual starts with the first saved forecast. From the second week of the pilot each week shows how far the forecast was off, and after a few weeks the accuracy and whether it runs optimistic.</p></div></div>`;
+  const idle=()=>live.act?'Blue: what-if, shaded against the forecast as provided. Hover for any week.':'Hover for any week. Dashed: forecast as provided.';
+  ch.wire('oread',idle); $('#oread').innerHTML=idle(); ch.anim.set(live.v,live.act,0);
+  const upd=()=>{const n=outlookText();live.act=n.act;live.v=n.wi.map(x=>x.v);$('#o_hero').innerHTML=n.hero;$('#o_sub').innerHTML=n.sub;$('#o_tbl').innerHTML=n.tbl;
+    LEV.forEach(l=>{const b=$('#lvl_'+l[0]);if(b)b.textContent=lvLab(state.lv[l[0]]);const sl=document.querySelector(`[data-lv="${l[0]}"]`);if(sl)sl.value=state.lv[l[0]];});
+    ch.anim.set(live.v,live.act);$('#oread').innerHTML=idle();};
+  document.querySelectorAll('[data-lv]').forEach(s=>s.oninput=()=>{state.lv[s.dataset.lv]=+s.value;upd();});
+  document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{Object.keys(state.lv).forEach(k=>state.lv[k]=0);Object.assign(state.lv,JSON.parse(b.dataset.preset));upd();});
+  wireCommon();
+}
+function renderSteer(){
+  const sens=[['Receipts -10%',{receipts:-10}],['Receipts +10%',{receipts:10}],['Supplier payments +10%',{suppliers:10}],['Supplier payments -10%',{suppliers:-10}],['Payroll +10%',{payroll:10}],['Tax and fees +10%',{tax:10}]].map(([l,o])=>{const lv=Object.assign({receipts:0,suppliers:0,payroll:0,tax:0},o);return {l,d:lowOf(fcPath(lv)).v-lowOf(BASE).v};});
+  const mx=Math.max(...sens.map(s=>Math.abs(s.d)));
+  const yser=R.map(r=>wy*YREL[r.i]);
+  const yw=420,yh=170,L=40,T=12,B=24,yx=i=>L+i*(yw-L-10)/12,yy=v=>T+(.03-v)/(.03-.015)*(yh-T-B);
+  let yg='';[.015,.02,.025,.03].forEach(v=>yg+=`<line x1="${L}" x2="${yw-10}" y1="${yy(v)}" y2="${yy(v)}" stroke="#e6e9ee"/><text x="${L-5}" y="${yy(v)+4}" text-anchor="end">${(v*100).toFixed(1)}%</text>`);
+  yg+=`<polyline fill="none" stroke="#14202e" stroke-width="2" points="${yser.map((v,i)=>yx(i)+','+yy(v)).join(' ')}"/>`;R.forEach((r,i)=>{if(i%3===0||i===12)yg+=`<text x="${yx(i)}" y="${yh-6}" text-anchor="middle">${r.w}</text>`;});
+  const fdl=ACC.filter(a=>a.type==='Time deposit').sort((a,b)=>new Date(a.mat)-new Date(b.mat));
+  $('#view').innerHTML=`<div class="eyebrow">Liquidity for the treasury and CFO conversation; yield, idle cash and sensitivity are marked as extensions. Built only from the bank statement data and the treasury forecast. As of ${AS_OF}.</div>
+  <h1 class="hero" style="font-size:28px">${pc(wy,2)} balance-weighted yield, about ${aed(LAST.c*wy)} a year at today's balances.</h1>
+  <p class="sub" style="margin:4px 0">${idleNow<1?'Almost all current account balances earn interest, so there is no idle cash above the operating minimum':aed(idleNow)+' sits in non-interest operating accounts above the operating minimum'}; ${aed(fdMat.slice(0,4).reduce((a,b)=>a+b,0))} of deposits mature in the next 4 weeks.</p>
+  <section><h2>Liquidity</h2><div class="stats">
+   <div class="stat"><div class="l">Available cash</div><div class="n1">${aed(avail)}</div><div class="s">Operating accounts, deposits and funds</div></div>
+   <div class="stat"><div class="l">Headroom over buffer</div><div class="n1">${aed(avail-BUF/1e6)}</div><div class="s">Buffer USD 125m (assumption), set by treasury</div></div>
+   <div class="stat"><div class="l">Forecast low point</div><div class="n1">${aed(lowOf(BASE).v)}</div><div class="s">Week of ${lowOf(BASE).w}, forecast as provided</div></div>
+   <div class="stat"><div class="l">Facility use</div><div class="n1" style="font-size:18px">No facility data</div><div class="s">Shown once facility details are provided</div></div>
+   <div class="stat"><div class="l">Idle cash <span class="sg">extension</span></div><div class="n1">${aed(idleNow)}</div><div class="s">Non-interest balances above a USD 20m operating minimum (assumption)</div></div></div></section>
+  <section><h2>What moves the 8-week low point most <span class="sg">extension</span></h2>${sens.map(s=>`<div class="sbar"><span>${s.l}</span><span class="trk"><span class="fill" style="width:${(Math.abs(s.d)/mx*100).toFixed(1)}%;background:${s.d>=0?'#2f7d4f':'#b8321f'}"></span></span><span class="n ${s.d<0?'neg':''}">${sg(s.d)}m</span></div>`).join('')}<p class="note" style="margin-top:6px">Change in the lowest forecast balance against the forecast as provided. ${ask('Which lever moves our 8-week low point most?')}</p></section>
+  <section><div class="cols"><div><h2>Yield trend <span class="sg">extension</span></h2><svg viewBox="0 0 ${yw} ${yh}" width="100%">${yg}</svg><p class="note">Balance-weighted yield per week. The step up on 25 Sep is USD 20m moved into money market funds.</p></div>
+  <div><h2>Deposit maturities <span class="sg">extension</span></h2><table><tr><th>Matures</th><th>Bank</th><th class="n">Yield</th><th class="n">USD m</th></tr>${fdl.map(a=>`<tr><td>${a.mat}</td><td>${a.bank}</td><td class="n">${pc(a.yld,2)}</td><td class="n">${f1(a.aed)}</td></tr>`).join('')}</table><p class="note" style="margin-top:8px">Forecast low point: week of ${lowOf(BASE).w}. Maturities before it can fund it without breaking a deposit.</p></div></div></section>
+  <section><div class="cols"><div><h2>Where the cash sits</h2>${banks.map(b=>`<div class="sbar"><span>${b.bank}</span><span class="trk"><span class="fill" style="width:${(b.share*100).toFixed(1)}%;background:var(--acc)"></span></span><span class="n">${pc(b.share)} · ${aed(b.aed)}</span></div>`).join('')}<p class="note">${pc(banks[0].share+banks[1].share+banks[2].share)} sits with the top three. No counterparty limits are in the pilot data, so this is concentration, not limit use.</p></div>
+  <div><h2>Currency</h2>${ccys.map(c=>`<div class="sbar"><span>${c.ccy}</span><span class="trk"><span class="fill" style="width:${(c.share*100).toFixed(1)}%;background:#6b7a8f"></span></span><span class="n">${pc(c.share)} · ${aed(c.aed)}</span></div>`).join('')}<p class="note">Non-USD balances drive the FX line in the weekly bridge.</p></div></div></section>
+  <section><h2>Assumptions behind these numbers</h2><p class="note">Yields are as recorded in the bank statement data. Idle cash uses an operating minimum of USD 20m, to be set by treasury. The forecast is treasury's own, as provided. Accounts missing from the register or without a current statement are not counted.</p></section>`;
+  fold({'Where the cash sits':['Banks and currencies','concentration'],'Assumptions':['Assumptions behind these numbers','read before quoting']});
+}
+function renderExceptions(){
+  const A=alerts().filter(a=>!a.ext);
+  $('#view').innerHTML=`<div class="eyebrow">Exceptions and data checks for this run. Alerts keep their age and owner until resolved; acknowledgements are recorded with name and note.</div>
+  <h1 class="hero" style="font-size:30px">${A.filter(a=>a.sev==='warning').length} items need a look; ${ACC.length-2} of ${ACC.length} accounts reconcile to bank statements.</h1>
+  <section><h2>Alerts</h2><table><tr><th></th><th>Alert</th><th>Status</th><th>Owner</th><th></th></tr>${A.map(a=>`<tr><td><span class="dot ${a.sev==='warning'?'':a.sev}"></span></td><td><b>${a.t}</b>${a.ext?'<span class="sg">extension</span>':''}<br><span class="mut" style="font-size:12px">${a.s}</span></td><td>${a.age==='new'?'<b style="color:var(--red)">new</b>':a.age||'<span class="mut">info</span>'}</td><td>${a.own}</td><td>${a.sev!=='ok'?ask('Explain: '+a.t):''}</td></tr>`).join('')}</table></section>
+  <section><h2>Data checks</h2><table>${[['Opening balance + movements = closing balance, per account',`${ACC.length-2} of ${ACC.length}`,0],['Statement received for the as-of date',`${ACC.length-2} of ${ACC.length}`,0],['No account overdrawn at the as-of date','pass',1],['Every account in the account register','1 unregistered',0],['Weeks on fixed Fridays; month-end balances stored separately','pass',1],['FX rates present for every non-USD account','pass',1],['Briefing numbers match the calculated data','pass',1]].map(c=>`<tr><td><span class="dot ${c[2]?'ok':''}"></span></td><td>${c[0]}</td><td class="n ${c[2]?'pos':''}">${c[1]}</td></tr>`).join('')}</table></section>
+  <section><h2>Sources</h2><table><tr><th>Source</th><th>Content</th><th>Latest</th><th>Mapping</th></tr><tr><td>Workday bank statement report</td><td>Balances and transactions, most accounts</td><td>${AS_OF}</td><td>approved</td></tr><tr><td>Bank statement files (MT940/BAI2)</td><td>Accounts not in Workday</td><td>${AS_OF}</td><td>approved</td></tr></table><p class="note" style="margin-top:8px">Each source is read through a data mapping that treasury approves before first use. Everything is read-only.</p></section>`;
+}
+function renderAccounts(){
+  const q=state.q.toLowerCase(),rows=ACC.filter(a=>(!state.bank||a.bank===state.bank)&&(!q||(a.bank+a.type+a.ccy+a.ent).toLowerCase().includes(q))).sort((a,b)=>b.aed-a.aed);
+  $('#view').innerHTML=`<div class="eyebrow">All positions at ${AS_OF}. Account numbers masked.</div>
+  <h1 class="hero" style="font-size:30px">${ACC.length} accounts across ${banks.length} banks and fund providers and ${ents.length} entities.</h1>
+  <p style="margin:10px 0"><input type="text" id="q" placeholder="Filter by bank, entity, type or currency" value="${state.q}"></p>
+  <table><tr><th>Bank</th><th>Entity</th><th>Type</th><th>Account</th><th>Ccy</th><th class="n">Yield</th><th>Matures</th><th class="n">USD m</th></tr>${rows.map(a=>`<tr><td>${a.bank}</td><td>${a.ent}</td><td>${a.type}${a.restr?' <span class="tag">restricted</span>':''}</td><td class="mut">${a.id}</td><td>${a.ccy}</td><td class="n">${a.yld?pc(a.yld,2):'<span class="mut">0.00%</span>'}</td><td>${a.mat||'<span class="mut">-</span>'}</td><td class="n">${f1(a.aed)}</td></tr>`).join('')}<tr class="tot"><td colspan="7"><b>Total</b></td><td class="n"><b>${f1(rows.reduce((s,a)=>s+a.aed,0))}</b></td></tr></table>`;
+  const i=$('#q');i.oninput=()=>{state.q=i.value;const p=i.selectionStart;renderAccounts();wireCommon();const j=$('#q');j.focus();j.setSelectionRange(p,p);};
+}
+function renderIdeas(){
+  const I=[['t1','Bank statements','Balance-weighted yield and interest run-rate','Weighted yield by instrument and bank, and annualised interest at current balances.','Turns recorded yields into a weekly management figure.'],
+  ['t1','Bank statements','Idle cash','Non-interest balances above an operating minimum treasury sets.','Points to cash that could be placed, on a threshold treasury owns.'],
+  ['t1','Bank statements','Maturities against the forecast low point','Deposits maturing in the next 8 weeks next to the lowest forecast balance.','Supports the roll-over or keep-on-call decision.'],
+  ['t2','Transactions','Forecast against actual','Accuracy and bias once weekly forecasts are saved.','Builds the evidence base for a rolling 13-week forecast.'],
+  ['t2','Transactions','Sensitivity of the low point','Which forecast lever moves the lowest balance most.','A quick stress view for management, e.g. late collections.'],
+  ['t2','Transactions','Treasury event log','One line per event (tax, placements, acquisitions) shown on the history chart.','Explains big moves without digging.'],
+  ['t3','Extra data','Bank exposure against limits','Cash and deposits per bank against approved counterparty limits.','Needs the approved counterparty limits.'],
+  ['t3','Extra data','CAPEX, OPEX, payroll drill-down and 13-week forecast','Category drill-down and a rolling 13-week forecast from ERP data.','Scoped after the pilot.']];
+  $('#view').innerHTML=`<div class="rmtag"><span class="sc i">Roadmap ideas</span> Not part of the pilot</div><div class="eyebrow">Possible ideas for later, beyond workstream 1. Not part of the pilot and not shown as mockups; each can be scoped and quoted separately if wanted. Sorted by the data each one needs.</div>
+  <h1 class="hero" style="font-size:30px">${I.length} analytics we suggest adding later.</h1>
+  <p class="sub"><span class="need t1">Bank statements</span> can be built from the balances already in scope. <span class="need t2">Transactions</span> needs transaction detail. <span class="need t3">Extra data</span> needs data outside the pilot.</p>
+  <section>${I.map(x=>`<div class="idea"><div><span class="need ${x[0]}">${x[1]}</span></div><div><h3>${x[2]}</h3><p>${x[3]}</p><div class="why">${x[4]}</div></div></div>`).join('')}</section>`;
+}
+function fold(map){document.querySelectorAll('#view > section').forEach(sec=>{const h=sec.querySelector('h2');if(!h)return;const key=Object.keys(map).find(k=>h.textContent.trim().startsWith(k));if(!key)return;const d=document.createElement('details');d.className='fold';const [t,hint]=map[key];d.innerHTML='<summary>'+t+' <span class="mut">'+hint+'</span></summary><div class="fb"></div>';const fb=d.querySelector('.fb');h.remove();Array.from(sec.childNodes).forEach(n=>fb.appendChild(n));sec.replaceWith(d);});}
+function wireCommon(){
+  document.querySelectorAll('[data-go]').forEach(e=>e.onclick=()=>{state.view=e.dataset.go;render();window.scrollTo(0,0);});
+  document.querySelectorAll('[data-bank]').forEach(e=>e.onclick=()=>{state.bank=state.bank===e.dataset.bank?null:e.dataset.bank;state.view='accounts';render();});
+  document.querySelectorAll('[data-ask]').forEach(e=>e.onclick=()=>{try{navigator.clipboard.writeText(e.dataset.ask)}catch(x){}toast('Question copied. Paste it into Claude to ask about these figures: '+e.dataset.ask);});
+}
+function render(){
+  $('#views').innerHTML=VIEWS.map(v=>`<span data-view="${v[0]}" class="${state.view===v[0]?'on':''}">${v[1]}${v[2]==='r'?'<i class="sc r">Not in pilot</i>':v[2]==='i'?'<i class="sc i">Roadmap</i>':''}</span>`).join('');
+  $('#scopebar').innerHTML=window._howClosed?'':'<div class="how"><b>How to explore this mockup:</b> hover any chart for the week · click a bank bar to see its accounts · open <span class="lnk" data-go="forecast">Forecast</span> and move the sliders · <span class="ask" style="pointer-events:none">Ask</span> copies a question you could put to Claude · Dark mode top right · <span class="lnk" data-go="onepager">CFO one-pager</span> prints to PDF <b class="hx" title="Hide">×</b></div>';const hx=document.querySelector('.how .hx');if(hx)hx.onclick=()=>{window._howClosed=1;render();};
+  document.querySelectorAll('#views span').forEach(s=>s.onclick=()=>{state.view=s.dataset.view;render();window.scrollTo(0,0);});
+  $('#asof').textContent='As of '+AS_OF;
+  $('#focus').innerHTML=state.bank?`<span class="focus">Focus: ${state.bank} <b id="unf">×</b></span>`:'';
+  const u=$('#unf');if(u)u.onclick=()=>{state.bank=null;render();};
+  ({summary:renderSummary,history:renderHistory,movements:renderMovements,forecast:renderOutlook,liquidity:renderSteer,exceptions:renderExceptions,accounts:renderAccounts,onepager:renderOnePager,ideas:renderIdeas})[state.view]();
+  wireCommon();
+}
+$('#foot').textContent='Mockup of the dashboard the cash visibility skill produces each run, for Integral Ad Science. All figures, banks, entities, accounts and events are simulated and are not IAS data. Workstream 1 covers Summary to Exceptions and the CFO one-pager; the Ideas tab lists possible extensions, scoped and quoted separately if wanted.';
+render();
+
+/* ===== chart animation (animated copy): each chart builds up once: on tab open if visible, otherwise when first scrolled into view; never on hover; text and layout do not move ===== */
+(function(){
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('anim-on');io.unobserve(e.target);}}),{threshold:.25}):null;
+  function once(el){if(io)io.observe(el);else requestAnimationFrame(()=>el.classList.add('anim-on'));}
+  function prep(svg){
+    if(svg.dataset.anim)return;svg.dataset.anim=1;
+    svg.querySelectorAll('polyline').forEach(p=>{if((p.id||'').endsWith('_wl'))return;if(p.getAttribute('stroke-dasharray'))return;try{p.style.setProperty('--len',p.getTotalLength());p.classList.add('a-line');}catch(e){}});
+    svg.querySelectorAll('polygon').forEach(p=>{if(!(p.id||'').endsWith('_wp'))p.classList.add('a-fade');});
+    svg.querySelectorAll('circle').forEach((c,k)=>{if((c.id||'').includes('_wc'))return;c.classList.add('a-pop');c.style.animationDelay=(0.35+k*0.035)+'s';});
+    const zero=svg.querySelector('line[stroke="#6f7480"]'),zy=zero?+zero.getAttribute('y1'):null;
+    svg.querySelectorAll('rect').forEach(r=>{if(!r.querySelector('title'))return;const y=+r.getAttribute('y'),h=+r.getAttribute('height');
+      r.classList.add('a-grow');r.style.transformOrigin=(zy==null||Math.abs(y+h-zy)<1)?'center bottom':'center top';r.style.animationDelay=(+r.getAttribute('x')/(svg.viewBox.baseVal.width||1000)*0.5)+'s';});
+    once(svg);
+  }
+  function prepBars(box){if(box.dataset.anim)return;box.dataset.anim=1;box.classList.add('anim-bars');once(box);}
+  function scan(){const v=document.getElementById('view');if(!v)return;v.querySelectorAll('svg[viewBox]').forEach(prep);
+    const boxes=new Set();v.querySelectorAll('.bar, .sbar').forEach(b=>boxes.add(b.parentElement));boxes.forEach(prepBars);}
+  new MutationObserver(scan).observe(document.getElementById('view'),{childList:true,subtree:true});
+  scan();
+})();
+
+/* ===== Promoted from experiment: E1, E2, E4, E5, E6, E8, E9a, E9b, E9c, E10 ===== */
+const BANKW={"Bank A": {"ca": [58.39, 59.86, 64.93, 67.02, 74.12, 75.22, 74.56, 59.97, 67.1, 68.14, 73.6, 74.77, 80.82], "fd": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "mmf": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "Bank B": {"ca": [11.08, 11.36, 12.24, 12.63, 13.81, 14.03, 13.95, 11.53, 12.62, 12.83, 13.78, 14.15, 15.04], "fd": [15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0], "mmf": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "Bank C": {"ca": [2.11, 2.31, 2.5, 2.75, 2.67, 2.89, 3.05, 2.64, 2.58, 2.79, 3.01, 3.28, 3.31], "fd": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "mmf": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "Bank D": {"ca": [1.54, 1.59, 1.72, 1.78, 1.95, 1.99, 1.98, 1.76, 1.77, 1.81, 1.95, 2.19, 2.14], "fd": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "mmf": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "Bank E": {"ca": [0.28, 0.29, 0.31, 0.32, 0.36, 0.36, 0.36, 0.0, 0.32, 0.33, 0.35, 0.0, 0.39], "fd": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "mmf": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "Fund provider 1": {"ca": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "fd": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "mmf": [24.8, 24.86, 24.92, 24.99, 25.05, 25.11, 25.17, 37.63, 37.76, 37.88, 38.01, 38.13, 38.25]}, "Fund provider 2": {"ca": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "fd": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "mmf": [15.2, 15.24, 15.28, 15.31, 15.35, 15.39, 15.43, 23.07, 23.14, 23.22, 23.29, 23.37, 23.45]}};
+const BK=Object.keys(BANKW).map(b=>({bank:b,tot:W.map((w,i)=>BANKW[b].ca[i]+BANKW[b].fd[i]+BANKW[b].mmf[i])}));
+state.cmp=1; state.pick=12;
+/* E9 floating hover card */
+const TT=document.createElement('div');TT.id='ttip';document.body.appendChild(TT);
+function tipShow(ev,h){TT.innerHTML=h;TT.style.opacity=1;const x=Math.min(innerWidth-TT.offsetWidth-12,ev.clientX+16),y=Math.max(8,ev.clientY-TT.offsetHeight-12);TT.style.left=x+'px';TT.style.top=y+'px';}
+function tipHide(){TT.style.opacity=0;}
+/* E8 sparkline */
+function spark(vals,w,h,col){w=w||160;h=h||30;const lo=Math.min(...vals),hi=Math.max(...vals),X=i=>2+i*(w-4)/(vals.length-1),Y=v=>h-3-(v-lo)/((hi-lo)||1)*(h-6);
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}"><polyline fill="none" stroke="${col||'#1663c7'}" stroke-width="1.6" points="${vals.map((v,i)=>X(i)+','+Y(v)).join(' ')}"/><circle cx="${X(vals.length-1)}" cy="${Y(vals[vals.length-1])}" r="2.6" fill="${col||'#1663c7'}"/></svg>`;}
+/* E1 + E2 + E7 + E4: chart extras by chart id */
+window.CX={
+  sc:()=>({band:1,notes:[{w:'02 Oct',t:'Quarter-start collections +16.2m',c:'#2f7d4f'},{w:'18 Sep',t:'Estimated tax -8.4m',c:'#b8321f',pos:'below'}]}),
+  hc:()=>state.hb==='cash'?({band:1,notes:[{w:'02 Oct',t:'Quarter-start collections +16.2m',c:'#2f7d4f'},{w:'18 Sep',t:'Estimated tax -8.4m',c:'#b8321f',pos:'below'}],pick:state.pick,onPick:i=>{state.pick=i;renderHistory();wireCommon();document.getElementById('wf')&&document.getElementById('wf').scrollIntoView({behavior:'smooth',block:'nearest'});}}):({pick:state.pick,onPick:i=>{state.pick=i;renderHistory();wireCommon();}})
+};
+/* E5 what changed */
+function changes(k){const a=12-k,list=[];
+  BK.forEach(b=>{const d=b.tot[12]-b.tot[a];if(Math.abs(d)>=1)list.push({t:`${b.bank}`,d,s:`${b.bank} ${d>0?'up':'down'} ${aed(Math.abs(d))} to ${aed(b.tot[12])}`});});
+  [['Operating accounts','ca'],['Time deposits','fd'],['Money market funds','mmf']].forEach(([l,key])=>{const d=WK[12][key]-WK[a][key];if(Math.abs(d)>=1)list.push({t:l,d,s:`${l} ${d>0?'up':'down'} ${aed(Math.abs(d))} to ${aed(WK[12][key])}`});});
+  return list.sort((x,y)=>Math.abs(y.d)-Math.abs(x.d)).slice(0,3);}
+function cmpCtl(){return `<span class="cmp">${[[1,'vs last week'],[4,'vs 4 weeks ago']].map(c=>`<span data-cmp="${c[0]}" class="${state.cmp===c[0]?'on':''}">${c[1]}</span>`).join('')}</span>`;}
+/* E8 KPI strip */
+function kpiStrip(){const k=state.cmp,a=12-k,top=w=>Math.max(...BK.map(b=>b.tot[w]))/WK[w].cash;
+  const K=[['Cash',W.map((_,i)=>WK[i].cash),v=>aed(v),(x,y)=>sg(x-y)+'m'],['Headroom over buffer',W.map((_,i)=>WK[i].cash-BUF/1e6),v=>aed(v),(x,y)=>sg(x-y)+'m'],['Money market fund share',W.map((_,i)=>WK[i].mmf/WK[i].cash),v=>pc(v),(x,y)=>((x-y)*100>=0?'+':'')+((x-y)*100).toFixed(0)+' pts'],['Top bank share',W.map((_,i)=>top(i)),v=>pc(v),(x,y)=>((x-y)*100>=0?'+':'')+((x-y)*100).toFixed(0)+' pts']];
+  return `<div class="kpis">${K.map(q=>`<div class="kpi"><div class="l">${q[0]}</div><div class="v">${q[2](q[1][12])}</div><div class="d">${q[3](q[1][12],q[1][a])} ${k===1?'vs last week':'vs 4 weeks ago'}</div>${spark(q[1],200,30)}</div>`).join('')}</div>`;}
+const _rs=renderSummary;renderSummary=function(){_rs();
+  const sub=document.querySelectorAll('#view p.sub')[1];
+  const ch=changes(state.cmp);
+  sub.insertAdjacentHTML('afterend',kpiStrip()+`<section style="padding:18px 0 4px;border-top:0"><h2>What changed ${cmpCtl()}</h2>${ch.map(c=>`<div class="chg"><span class="ar ${c.d<0?'neg':'pos'}">${c.d<0?'&#9660;':'&#9650;'}</span><span>${c.s}</span><span class="n ${c.d<0?'neg':''}">${sg(c.d)}m</span></div>`).join('')}<p class="note" style="margin-top:6px">From bank statements, by bank and instrument. Deposits moving between banks show as one bank down, another up.</p></section>`);
+  document.querySelectorAll('[data-cmp]').forEach(e=>e.onclick=()=>{state.cmp=+e.dataset.cmp;render();});
+};
+/* E3 stacked area + E4 week waterfall in History */
+function stackSvg(){const w=760,h=220,L=50,Rr=14,T=12,B=26,n=W.length,mx=Math.ceil(Math.max(...WK.map(x=>x.cash))/100)*100,X=i=>L+i*(w-L-Rr)/(n-1),Y=v=>T+(mx-v)/mx*(h-T-B);
+  const lay=[['mmf','#21b07c','Money market funds'],['fd','#1663c7','Time deposits'],['ca','#9fb8d6','Operating accounts']];let g='';
+  for(let v=0;v<=mx;v+=100)g+=`<line x1="${L}" x2="${w-Rr}" y1="${Y(v)}" y2="${Y(v)}" stroke="#e6e9ee"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${v}</text>`;
+  let base=WK.map(()=>0);lay.forEach(([k,col,l])=>{const top=WK.map((x,i)=>base[i]+x[k]);g+=`<polygon points="${top.map((v,i)=>X(i)+','+Y(v)).join(' ')} ${base.map((v,i)=>X(i)+','+Y(v)).reverse().join(' ')}" fill="${col}" opacity=".85"><title>${l}</title></polygon>`;base=top;});
+  const i23=W.indexOf('23 Oct');g+=`<line x1="${X(i23)}" x2="${X(i23)}" y1="${T}" y2="${h-B}" stroke="#14202e" stroke-dasharray="3 3" opacity=".5"/><text x="${X(i23)-6}" y="${T+12}" text-anchor="end" style="font-size:10.5px;font-weight:600;fill:#14202e">USD 20m into funds</text>`;
+  W.forEach((l,i)=>{if(i%2===0||i===n-1)g+=`<text x="${X(i)}" y="${h-8}" text-anchor="middle">${l}</text>`;});
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%">${g}</svg><div class="presets" style="font-size:12px;color:var(--mut)">${lay.slice().reverse().map(([k,c,l])=>`<span><i style="display:inline-block;width:10px;height:10px;background:${c};margin-right:5px;vertical-align:-1px"></i>${l}</span>`).join('')}</div>`;}
+function waterfall(i){const r=R[i];if(!i)return '<p class="note">Pick a later week: 07 Aug is the first week in the file.</p>';
+  const st=[['Opening',r.o,'t'],['Receipts',r.r,'d'],['Payments',-r.p,'d'],['Financing',r.f,'d'],['FX',r.x,'d'],['Closing',r.c,'t']].filter(s=>s[2]==='t'||Math.abs(s[1])>0.05);
+  const w=520,h=40+st.length*28,L=96,Rr=60;let run=0;const lv=st.map(s=>{if(s[2]==='t'){run=s[1];return[0,s[1]]}const a=run;run+=s[1];return[a,run]});const mx=Math.max(...lv.flat())*1.05,x=v=>L+v/mx*(w-L-Rr);let g='';
+  st.forEach((q,k)=>{const yy=10+k*28,[a,b]=lv[k],col=q[2]==='t'?'#14202e':q[0]==='Financing'?'#6f56d1':q[1]>=0?'#2f7d4f':'#b8321f';g+=`<text x="${L-8}" y="${yy+13}" text-anchor="end" style="font-size:11.5px;fill:#22324a">${q[0]}</text><rect x="${x(Math.min(a,b))}" y="${yy}" width="${Math.max(2,Math.abs(x(b)-x(a)))}" height="18" rx="3" fill="${col}"/><text x="${x(Math.max(a,b))+5}" y="${yy+13}" style="font-size:11px;fill:#22324a">${q[2]==='t'?f1(q[1]):sg(q[1])}</text>`;});
+  const p=WK[i-1],c=WK[i],moves=[['Operating accounts',c.ca-p.ca],['Time deposits',c.fd-p.fd],['Money market funds',c.mmf-p.mmf]].filter(m=>Math.abs(m[1])>=1).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]));
+  const bm=BK.map(b=>[b.bank,b.tot[i]-b.tot[i-1]]).filter(m=>Math.abs(m[1])>=1).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1])).slice(0,2);
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="max-width:620px">${g}</svg><p class="wfx"><b>Week ending ${r.w}:</b> cash ${r.c-r.o>=0?'up':'down'} ${aed(Math.abs(r.c-r.o))}. ${moves.length?'Instruments: '+moves.map(m=>`${m[0].toLowerCase()} ${sg(m[1])}m`).join(', ')+'.':''} ${bm.length?'Banks: '+bm.map(m=>`${m[0]} ${sg(m[1])}m`).join(', ')+'.':''}</p><p class="note">Opening, closing, FX and the instrument and bank moves are from your bank statement data; the receipts and payments split comes from statement transactions (simulated here).</p>`;}
+const _rh=renderHistory;renderHistory=function(){_rh();
+  const read=document.getElementById('hread');
+  read.insertAdjacentHTML('afterend',`<section id="wf"><h2>Week in detail <span class="mut" style="text-transform:none;letter-spacing:0;font-weight:400">· click a week on the chart</span></h2>${waterfall(state.pick)}</section>`);
+  document.querySelectorAll('#tWkX').forEach(()=>{});
+};
+/* E6 bank share trend + E8 bank sparklines in Positions */
+const _ra=renderAccounts;renderAccounts=function(){_ra();
+  const top=BK.filter(b=>b.tot[12]>1).sort((a,b)=>b.tot[12]-a.tot[12]);
+  const hhi=W.map((_,i)=>BK.reduce((s,b)=>s+Math.pow(b.tot[i]/WK[i].cash,2),0));
+  const cols=['#1663c7','#21b07c','#b7791f','#6f56d1','#9aa1ab'];
+  const w=760,h=200,L=40,Rr=70,T=10,B=24,n=W.length,X=i=>L+i*(w-L-Rr)/(n-1),Y=v=>T+(1-v)*(h-T-B);let g='';
+  [0,.25,.5,.75,1].forEach(v=>g+=`<line x1="${L}" x2="${w-Rr}" y1="${Y(v)}" y2="${Y(v)}" stroke="#e6e9ee"/><text x="${L-5}" y="${Y(v)+4}" text-anchor="end">${v*100}%</text>`);
+  g+=`<line id="bs_g" x1="0" x2="0" y1="${T}" y2="${h-B}" stroke="#14202e" opacity="0"/>`;
+  top.forEach((b,k)=>{const sh=b.tot.map((v,i)=>v/WK[i].cash);g+=`<polyline fill="none" stroke="${cols[k%5]}" stroke-width="2" points="${sh.map((v,i)=>X(i)+','+Y(v)).join(' ')}"><title>${b.bank}</title></polyline><text x="${w-Rr+6}" y="${Y(sh[12])+4}" style="font-size:11px;font-weight:600;fill:${cols[k%5]}">${b.bank} ${pc(sh[12])}</text>`;});
+  W.forEach((l,i)=>{if(i%2===0||i===n-1)g+=`<text x="${X(i)}" y="${h-6}" text-anchor="middle">${l}</text>`;});
+  const tbl=`<table style="margin-top:8px"><tr><th>Bank</th><th>13 weeks</th><th class="n">Now</th><th class="n">Share</th></tr>${top.map((b,k)=>`<tr><td>${b.bank}</td><td>${spark(b.tot,160,24,cols[k%5])}</td><td class="n">${f1(b.tot[12])}</td><td class="n">${pc(b.tot[12]/WK[12].cash)}</td></tr>`).join('')}</table>`;
+  const q=document.getElementById('q').closest('p');
+  q.insertAdjacentHTML('beforebegin',`<section style="border-top:0;padding-top:10px"><div class="cols"><div><h2>Bank share over 13 weeks</h2><svg id="bs" viewBox="0 0 ${w} ${h}" width="100%">${g}</svg><p class="note">Concentration score (sum of squared shares, 1 = one bank): ${hhi[12].toFixed(2)} now, ${hhi[0].toFixed(2)} on 07 Aug. Money market funds rose after the 25 Sep top-up.</p></div><div><h2>By bank</h2>${tbl}</div></div></section>`);
+  /* E6 hover: guide line and a card with every bank's share that week */
+  const sv=document.getElementById('bs'),gl=document.getElementById('bs_g');
+  sv.onmousemove=ev=>{const r=sv.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width*w;let i=Math.round((x-L)/((w-L-Rr)/(n-1)));i=Math.max(0,Math.min(n-1,i));gl.setAttribute('x1',X(i));gl.setAttribute('x2',X(i));gl.setAttribute('opacity','.3');
+    tipShow(ev,`<b>${W[i]}</b>: cash ${aed(WK[i].cash)}<br>`+top.map((b,k)=>`<span style="color:${cols[k%5]}">&#9632;</span> ${b.bank} ${pc(b.tot[i]/WK[i].cash)} <span class="mut">(${f1(b.tot[i])})</span>`).join('<br>')+`<br><span class="mut">Concentration score ${hhi[i].toFixed(2)}</span>`);};
+  sv.onmouseleave=()=>{gl.setAttribute('opacity','0');tipHide();};
+};
+/* E9 dark mode toggle */
+(function(){const b=document.createElement('button');b.className='modebtn';b.textContent='Dark';b.onclick=()=>{const d=document.documentElement.classList.toggle('dark');b.textContent=d?'Light':'Dark';};document.querySelector('.hdr .wrap').appendChild(b);})();
+
+
+/* ===== v0.2: 12-month and daily history, CFO one-pager, workstream 2 preview ===== */
+const M12=[['Nov 25',118.2],['Dec 25',124.5],['Jan 26',112.3],['Feb 26',115.8],['Mar 26',121.0],['Apr 26',109.6],['May 26',117.4],['Jun 26',126.9],['Jul 26',131.5],['Aug 26',142.9],['Sep 26',156.0],['Oct 26',178.4]];
+const DAILY=[['19 Oct',167.8],['20 Oct',168.6],['21 Oct',170.2],['22 Oct',169.4],['23 Oct',170.9],['26 Oct',171.6],['27 Oct',173.9],['28 Oct',174.4],['29 Oct',176.1],['30 Oct',178.4]];
+const _rh2=renderHistory;renderHistory=function(){_rh2();
+  const mc=lineChart({past:M12.map(m=>({w:m[0],v:m[1]})),W:1000,H:220,id:'mc',buf:BUF/1e6});
+  const hero=document.querySelector('#view h1.hero');
+  hero.insertAdjacentHTML('beforebegin',`<section style="border-top:0;padding-top:0"><h2>Last 12 months, month-end</h2>${mc.svg}<div class="read" id="mread"></div>
+  <div class="cols" style="margin-top:12px"><div><h2>Last 10 business days, daily close</h2><table><tr><th>Day</th><th class="n">USD m</th><th class="n">Change</th></tr>${DAILY.map((d,i)=>`<tr><td>${d[0]}</td><td class="n">${f1(d[1])}</td><td class="n ${i&&d[1]-DAILY[i-1][1]<0?'neg':''}">${i?sg(d[1]-DAILY[i-1][1]):'<span class="mut">-</span>'}</td></tr>`).join('')}</table></div>
+  <div><p class="note" style="margin-top:34px">The pilot reads daily statements, so balances are available every business day. Month-end gives the 12-month view; the weekly view below uses fixed Fridays for a stable trend. History covers the period your data provides, up to 12 months.</p>${spark(DAILY.map(d=>d[1]),300,60)}</div></div></section><h2 style="margin-top:20px">Last 13 weeks, weekly</h2>`);
+  mc.wire('mread','Month-end cash, last 12 months (simulated). Hover for any month.');
+};
+function renderOnePager(){
+  const lowB=lowOf(BASE),A=alerts().filter(a=>a.sev==='warning'&&!a.ext);
+  const ch=lineChart({past:M12.map(m=>({w:m[0],v:m[1]})),W:1000,H:200,id:'opc',buf:BUF/1e6});
+  $('#view').innerHTML=`<div class="op"><div class="eyebrow">Treasury one-pager for the CFO &nbsp;|&nbsp; as of ${AS_OF} &nbsp;|&nbsp; simulated data <button class="prt" onclick="window.print()">Print or save as PDF</button></div>
+  <h1 class="hero" style="font-size:28px">${aed(avail)} available liquidity, ${aed(avail-BUF/1e6)} above the buffer.</h1>
+  <div class="stats"><div class="stat"><div class="l">Cash</div><div class="n1">${aed(avail)}</div><div class="s">${sg(LAST.c-R[R.length-2].c)}m vs last week</div></div>
+  <div class="stat"><div class="l">Headroom over buffer</div><div class="n1">${aed(avail-BUF/1e6)}</div><div class="s">Buffer USD 125m (assumption)</div></div>
+  <div class="stat"><div class="l">Forecast low point</div><div class="n1">${aed(lowB.v)}</div><div class="s">Week of ${lowB.w}, forecast as provided</div></div>
+  <div class="stat"><div class="l">Items needing a look</div><div class="n1">${A.length}</div><div class="s">See exceptions</div></div></div>
+  <div class="brief" style="margin-top:14px"><div class="tag">Briefing · AI-written, every number checked against the data</div>
+  <p>Cash rose ${aed(LAST.c-R[0].c)} since 07 Aug on steady collections; the largest outflow was the USD 8.4m estimated tax on 18 Sep.</p>
+  <p>On the forecast as provided, cash stays above the buffer for the next 8 weeks; the lowest point is ${aed(lowB.v)} in the week of ${lowB.w}.</p></div>
+  <section><h2>Cash, last 12 months (month-end)</h2>${ch.svg}</section>
+  <section><div class="cols"><div><h2>By bank</h2>${banks.map(b=>`<div class="sbar"><span>${b.bank}</span><span class="trk"><span class="fill" style="width:${(b.share*100).toFixed(1)}%;background:var(--acc)"></span></span><span class="n">${pc(b.share)}</span></div>`).join('')}</div>
+  <div><h2>By entity</h2>${ents.map(e=>`<div class="sbar"><span>${e.ent}</span><span class="trk"><span class="fill" style="width:${(e.aed/LAST.c*100).toFixed(1)}%;background:#6b7a8f"></span></span><span class="n">${pc(e.aed/LAST.c)}</span></div>`).join('')}</div></div></section>
+  <section><h2>Needs attention</h2>${A.map(a=>`<div class="att"><span class="dot"></span><div><b>${a.t}</b> <span class="mut">${a.s}</span></div></div>`).join('')}</section>
+  <p class="note">Produced by the skill from the latest run; every number traces to the source data. Facility use is not shown because no facility data was provided.</p></div>`;
+}
+render();
+</script>
+</body>
+</html>
